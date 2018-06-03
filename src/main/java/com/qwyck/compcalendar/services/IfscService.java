@@ -1,5 +1,6 @@
 package com.qwyck.compcalendar.services;
 
+import java.util.List;
 import java.nio.charset.Charset;
 import com.qwyck.compcalendar.templates.Competitions;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -27,6 +28,14 @@ public class IfscService {
 
     public Competitions findAll() {
         return restTemplate.getForObject(IFSC_RESOURCE_URL, Competitions.class);
+    }
+
+    public Competitions findByCategory(List<String> cats) {
+        Competitions competitions = restTemplate.getForObject(IFSC_RESOURCE_URL, Competitions.class);
+
+        competitions.getCompetitions().removeIf(comp -> !cats.contains(comp.getCat()));
+
+        return competitions;
     }
 
 }

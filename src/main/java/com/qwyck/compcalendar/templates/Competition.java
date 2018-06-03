@@ -8,7 +8,7 @@ import java.util.Date;
 public class Competition {
 
     @JsonProperty("cat_id")
-    private long cat;
+    private String cat;
 
     @JsonProperty("date")
     private Date startDate;
@@ -25,14 +25,14 @@ public class Competition {
     /**
      * @return the cat
      */
-    public long getCat() {
+    public String getCat() {
         return cat;
     }
 
     /**
      * @param cat the cat to set
      */
-    public void setCat(long cat) {
+    public void setCat(String cat) {
         this.cat = cat;
     }
 
