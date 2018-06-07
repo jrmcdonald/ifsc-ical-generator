@@ -49,17 +49,19 @@ public class IfscController {
 
         ICalendar cal = new ICalendar();
 
-        for (Competition competition : competitions.getCompetitions()) {
-            VEvent event = new VEvent();
-
-            event.setDateStart(competition.getStartDate(), false);
-            event.setDateEnd(competition.getEndDate(), false);
-            event.setSummary(competition.getName());
-            event.setDescription(competition.getHomepage());
-
-            cal.addEvent(event);
-        }
-
+        competitions.getCompetitions().forEach(comp -> addEvent(comp, cal));
+        
         return Biweekly.write(cal).go();
+    }
+
+    private void addEvent(Competition competition, ICalendar cal) {
+        VEvent event = new VEvent();
+
+        event.setDateStart(competition.getStartDate(), false);
+        event.setDateEnd(competition.getEndDate(), false);
+        event.setSummary(competition.getName());
+        event.setDescription(competition.getHomepage());
+
+        cal.addEvent(event);
     }
 }
