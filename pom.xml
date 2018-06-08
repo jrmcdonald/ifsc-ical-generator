@@ -2,12 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.qwyck</groupId>
-    <artifactId>qwyck-comp-calendar</artifactId>
+    <groupId>com.jrmcdonald</groupId>
+    <artifactId>ifsc-calendar</artifactId>
     <version>0.1.0</version>
 
     <properties>
       <java.version>1.8</java.version>
+      <docker.image.prefix>jrmcdonald</docker.image.prefix>
     </properties>
 
     <parent>
@@ -52,6 +53,56 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+        <plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>dockerfile-maven-plugin</artifactId>
+            <version>1.4.3</version>
+            <executions>
+              <execution>
+                  <id>build-and-tag-latest</id>
+                  <phase>none</phase>
+                  <goals>
+                      <goal>build</goal>
+                  </goals>
+              </execution>
+              <execution>
+                  <id>tag-version</id>
+                  <phase>none</phase>
+                  <goals>
+                      <goal>tag</goal>
+                  </goals>
+                  <configuration>
+                      <tag>${project.version}</tag>
+                  </configuration>
+              </execution>
+              <execution>
+                  <id>push-latest</id>
+                  <phase>none</phase>
+                  <goals>
+                      <goal>push</goal>
+                  </goals>
+                  <configuration>
+                      <tag>latest</tag>
+                  </configuration>
+              </execution>
+              <execution>
+                  <id>push-version</id>
+                  <phase>none</phase>
+                  <goals>
+                      <goal>push</goal>
+                  </goals>
+                  <configuration>
+                      <tag>${project.version}</tag>
+                  </configuration>
+              </execution>
+            </executions>
+            <configuration>
+                <repository>${docker.image.prefix}/${project.artifactId}</repository>
+                <buildArgs>
+                    <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                </buildArgs>
+            </configuration>
         </plugin>
       </plugins>
     </build>
