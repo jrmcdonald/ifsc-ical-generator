@@ -1,9 +1,9 @@
-package com.qwyck.compcalendar.controllers;
+package com.jrmcdonald.ifsc.controllers;
 
 import java.util.List;
-import com.qwyck.compcalendar.services.IfscService;
-import com.qwyck.compcalendar.templates.Competition;
-import com.qwyck.compcalendar.templates.Competitions;
+import com.jrmcdonald.ifsc.services.IfscService;
+import com.jrmcdonald.ifsc.templates.Competition;
+import com.jrmcdonald.ifsc.templates.Competitions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +24,7 @@ public class IfscController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/ifsc/json", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/json", method = RequestMethod.GET, produces = "application/json")
     public Competitions getJson(@RequestParam(value = "cats", required = false) List<String> cats) {
         Competitions competitions = null;
 
@@ -37,7 +37,7 @@ public class IfscController {
         return competitions;
     }
 
-    @RequestMapping(value = "/ifsc/ical", method = RequestMethod.GET, produces = "text/calendar")
+    @RequestMapping(value = "/ical", method = RequestMethod.GET, produces = "text/calendar")
     public String getCal(@RequestParam(value = "cats", required = false) List<String> cats) {
         Competitions competitions = null;
 

@@ -1,4 +1,4 @@
-package com.qwyck.compcalendar.services;
+package com.jrmcdonald.ifsc.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,8 +9,8 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import com.qwyck.compcalendar.templates.Competition;
-import com.qwyck.compcalendar.templates.Competitions;
+import com.jrmcdonald.ifsc.templates.Competition;
+import com.jrmcdonald.ifsc.templates.Competitions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

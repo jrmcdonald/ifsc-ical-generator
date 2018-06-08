@@ -1,4 +1,4 @@
-package com.qwyck.compcalendar.templates;
+package com.jrmcdonald.ifsc.templates;
 
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
