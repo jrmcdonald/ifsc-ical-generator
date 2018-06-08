@@ -1,8 +1,8 @@
-package com.qwyck.compcalendar.services;
+package com.jrmcdonald.ifsc.services;
 
 import java.util.List;
 import java.nio.charset.Charset;
-import com.qwyck.compcalendar.templates.Competitions;
+import com.jrmcdonald.ifsc.templates.Competitions;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;

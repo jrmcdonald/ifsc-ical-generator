@@ -1,4 +1,4 @@
-package com.qwyck.compcalendar;
+package com.jrmcdonald.ifsc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
