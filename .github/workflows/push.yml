@@ -35,4 +35,4 @@ jobs:
       run: ./gradlew build
       
     - name: Sonar
-      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=${GITHUB_REF##*/}
+      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=${git branch --show-current}
