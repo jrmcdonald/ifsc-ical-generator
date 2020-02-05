@@ -4,14 +4,15 @@ on:
   push:
     branches-ignore:
       - 'master'
-  pull_request:
-    branches-ignore:
-      - 'master'   
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    env:
+      BRANCH_NAME: ${GITHUB_REF##*/}
+      SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
 
     steps:
     - uses: actions/checkout@v2
@@ -33,3 +34,6 @@ jobs:
 
     - name: Build
       run: ./gradlew build
+      
+    - name: Sonar
+      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=${BRANCH_NAME}
