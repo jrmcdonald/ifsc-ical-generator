@@ -1,9 +1,6 @@
 name: Java CI
 
-on:
-  push:
-    branches-ignore:
-      - 'master'
+on: [push, pull_request]
 
 jobs:
   build:
@@ -38,5 +35,12 @@ jobs:
     - name: Build
       run: ./gradlew build
       
+    - name: Set PR Number
+      run: |
+        export PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+        export PR_NUMBER_OPT="-Dsonar.pullrequest.key=${PR_NUMBER}"
+        echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
+      if: github.event_name == 'pull_request'
+      
     - name: Sonar
-      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current)
+      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current) ${PR_NUMBER_OPT}
