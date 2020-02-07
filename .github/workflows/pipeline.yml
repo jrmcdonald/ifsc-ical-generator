@@ -1,0 +1,94 @@
+name: Java CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    env: 
+      SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 50
+    - run: |
+        git fetch --no-tags --prune --depth=1 origin master
+
+    - uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+ 
+    - name: Set up JDK 1.11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11
+
+    - name: Set up Gradle
+      run: chmod +x gradlew
+
+    - name: Build
+      run: ./gradlew build
+      
+    - name: Set PR Number
+      if: github.event_name == 'pull_request'
+      run: |
+        export PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+        export PR_NUMBER_OPT="-Dsonar.pullrequest.key=${PR_NUMBER}"
+        echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
+      
+    - name: Sonar
+      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current) ${PR_NUMBER_OPT}
+      
+      - name: Set Up Env
+        run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF:10}
+        if: startsWith(github.ref, 'refs/tags/')
+      
+    - name: Upload Build Libs
+      uses: actions/upload-artifact@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: libs
+        path: build/libs/ifsc-ical-generator.${RELEASE_VERSION}.jar
+        
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Download math result for job 1
+          uses: actions/download-artifact@v1
+          with:
+            name: libs
+            
+      - name: Set Up Env
+        run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF:10}
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: libs/ifsc-ical-generator.${RELEASE_VERSION}.jar
+          asset_name: ifsc-ical-generator.${RELEASE_VERSION}.jar
+          asset_content_type: application/java-archive
+      
