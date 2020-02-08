@@ -45,7 +45,7 @@ jobs:
       run: |
         pwd
         echo ${GITHUB_WORKSPACE}
-        ls -l
+        ls -l build/libs
       
     - name: Set PR Number
       if: github.event_name == 'pull_request'
