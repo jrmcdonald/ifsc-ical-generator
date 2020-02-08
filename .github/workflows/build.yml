@@ -41,6 +41,9 @@ jobs:
     - name: Build
       run: ./gradlew build
       
+    - name: Debug
+      run: ls -lR
+      
     - name: Set PR Number
       if: github.event_name == 'pull_request'
       run: |
