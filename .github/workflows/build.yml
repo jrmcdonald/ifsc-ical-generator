@@ -1,0 +1,52 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    env: 
+      SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 50
+    - run: |
+        git fetch --no-tags --prune --depth=1 origin master
+
+    - uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+ 
+    - name: Set up JDK 1.11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11
+
+    - name: Set up Gradle
+      run: chmod +x gradlew
+
+    - name: Build
+      run: ./gradlew build
+      
+    - name: Set PR Number
+      if: github.event_name == 'pull_request'
+      run: |
+        export PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+        export PR_NUMBER_OPT="-Dsonar.pullrequest.key=${PR_NUMBER}"
+        echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
+      
+    - name: Sonar
+      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current) ${PR_NUMBER_OPT}
