@@ -1,0 +1,119 @@
+import com.github.spotbugs.SpotBugsTask
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.owasp:dependency-check-gradle:5.3.0'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'com.github.ben-manes.versions'
+    id 'com.github.spotbugs'
+    id 'io.spring.dependency-management'
+    id 'org.owasp.dependencycheck'
+    id 'org.sonarqube'
+    id 'org.springframework.boot'
+    id 'project-report'
+}
+
+group = 'com.jrmcdonald'
+version = "${majorVersion}.${minorVersion}.${patchVersion}"
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "net.sf.biweekly:biweekly:${biweeklyVersion}"
+
+    testImplementation "com.jayway.jsonpath:json-path:${jsonPathVersion}"
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        //exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+compileJava {
+    options.compilerArgs << "-Werror"
+    options.compilerArgs << "-Xlint:all"
+    options.compilerArgs << "-Xlint:-try"
+    options.compilerArgs << "-Xlint:-processing"
+}
+
+jacoco {
+    toolVersion = "${jacocoToolVersion}"
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+}
+
+dependencyUpdates.resolutionStrategy {
+    componentSelection { rules ->
+        rules.all { ComponentSelection selection ->
+            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
+                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+            }
+            if (rejected) {
+                selection.reject('Release candidate')
+            }
+        }
+    }
+}
+
+dependencyCheck {
+    failOnError = false
+    format = 'ALL'
+    cveValidForHours = 8
+}
+
+spotbugs {
+    toolVersion = "${spotbugsToolVersion}"
+    ignoreFailures = true // TODO: Remove and fix issues
+}
+
+tasks.withType(SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+    spotbugsTest.enabled = false
+}
+
+plugins.withType(JacocoPlugin) {
+    tasks["test"].finalizedBy 'jacocoTestReport'
+}
+
+htmlDependencyReport {
+    projects = project.allprojects
+}
+
+dependencyReport {
+    projects = project.allprojects
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "jrmcdonald_ifsc-ical-generator"
+        property "sonar.organization", "jrmcdonald"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
+
+check.dependsOn htmlDependencyReport
+check.dependsOn dependencyReport
+build.dependsOn dependencyUpdates
+test.finalizedBy jacocoTestReport
