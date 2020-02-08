@@ -33,7 +33,7 @@ jobs:
 
     - name: Set Jar Path
       id: set_jar_path
-      run: echo "::set-output name=jar_path::${GITHUB_WORKSPACE}/build/libs/${{ steps.set_variables.outputs.jar_name }}"
+      run: echo "::set-output name=jar_path::${GITHUB_WORKSPACE}/build/libs/${{ steps.set_jar_name.outputs.jar_name }}"
 
     - name: Set up JDK 1.11
       uses: actions/setup-java@v1
