@@ -41,12 +41,6 @@ jobs:
     - name: Build
       run: ./gradlew build
       
-    - name: debugging
-      run: |
-        pwd
-        echo ${GITHUB_WORKSPACE}
-        ls -l build/libs
-      
     - name: Set PR Number
       if: github.event_name == 'pull_request'
       run: |
