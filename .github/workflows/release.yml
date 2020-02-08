@@ -50,10 +50,6 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Debugging
-      run: |
-        echo ./build/libs/ifsc-ical-generator-${{ steps.set_release_version.outputs.release_version }}.jar
-
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1.0.1
