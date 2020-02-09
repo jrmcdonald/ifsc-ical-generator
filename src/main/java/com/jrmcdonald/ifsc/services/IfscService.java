@@ -38,4 +38,12 @@ public class IfscService {
         return competitions;
     }
 
+    public Competitions findByCategoryTwo(List<String> cats) {
+        Competitions competitions = restTemplate.getForObject(IFSC_RESOURCE_URL, Competitions.class);
+
+        competitions.getCompetitions().removeIf(comp -> !cats.contains(comp.getCat()));
+
+        return competitions;
+    }
+
 }
