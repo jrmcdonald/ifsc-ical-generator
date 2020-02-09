@@ -75,9 +75,7 @@ dependencyUpdates.resolutionStrategy {
 }
 
 dependencyCheck {
-    failOnError = false
     format = 'ALL'
-    cveValidForHours = 8
 }
 
 spotbugs {
@@ -116,5 +114,6 @@ sonarqube {
 
 check.dependsOn htmlDependencyReport
 check.dependsOn dependencyReport
+check.dependsOn dependencyCheckAnalyze
 build.dependsOn dependencyUpdates
 test.finalizedBy jacocoTestReport
