@@ -41,9 +41,6 @@ jobs:
     - name: Build
       run: ./gradlew build
       
-    - name: Debug
-      run: ls -lR
-      
     - name: Set PR Number
       if: github.event_name == 'pull_request'
       run: |
@@ -52,4 +49,4 @@ jobs:
         echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
       
     - name: Sonar
-      run: ./gradlew jacocoTestReport sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current) ${PR_NUMBER_OPT} --info
+      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current) ${PR_NUMBER_OPT} --info
