@@ -110,6 +110,7 @@ sonarqube {
         property "sonar.projectKey", "jrmcdonald_ifsc-ical-generator"
         property "sonar.organization", "jrmcdonald"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 

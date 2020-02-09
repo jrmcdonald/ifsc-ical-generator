@@ -49,4 +49,4 @@ jobs:
         echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
       
     - name: Sonar
-      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current) ${PR_NUMBER_OPT}
+      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current) ${PR_NUMBER_OPT} --info
