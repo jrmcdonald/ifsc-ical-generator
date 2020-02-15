@@ -1,6 +1,5 @@
 package com.jrmcdonald.ifsc.service.calendar;
 
-import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import com.jrmcdonald.ifsc.model.Competition;
@@ -41,13 +40,13 @@ public class InternetCalendarService implements CalendarService {
         return event;
     }
 
-    private String writeCalendar(List<VEvent> events) {
-        return Biweekly.write(createCalendar(events)).go();
-    }
-
     private ICalendar createCalendar(List<VEvent> events) {
         ICalendar calendar = new ICalendar();
         calendar.getEvents().addAll(events);
         return calendar;
+    }
+
+    private String writeCalendar(List<VEvent> events) {
+        return createCalendar(events).write();
     }
 }

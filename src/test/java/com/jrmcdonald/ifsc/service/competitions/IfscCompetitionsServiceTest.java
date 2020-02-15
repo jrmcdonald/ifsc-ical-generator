@@ -3,12 +3,14 @@ package com.jrmcdonald.ifsc.service.competitions;
 import com.jrmcdonald.ifsc.model.Competition;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
@@ -32,7 +34,7 @@ public class IfscCompetitionsServiceTest {
     @BeforeEach
     void beforeEach() {
         mockWebServer = new MockWebServer();
-        service = new IfscCompetitionsService(mockWebServer.url("localhost/").toString());
+        service = new IfscCompetitionsService(mockWebServer.url("/").toString());
     }
 
     @AfterEach
@@ -42,12 +44,12 @@ public class IfscCompetitionsServiceTest {
 
     @Test
     @DisplayName("Should return competitions")
-    void shouldReturnCompetitions() throws IOException {
+    void shouldReturnCompetitions() throws Exception {
         mockWebServer.enqueue(
                 new MockResponse()
                         .setResponseCode(200)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(new String(Files.readAllBytes(Paths.get("src/test/resources/find_all.json")))));
+                        .setBody(new String(Files.readAllBytes(Paths.get("src/test/resources/data/ifscResponseInput.json")))));
 
         StepVerifier.create(service.findAll())
                 .assertNext(competitionList -> {
@@ -72,17 +74,21 @@ public class IfscCompetitionsServiceTest {
                     assertThat(competitions.get(2).getHomepage()).isEqualTo("http://www.cliffhanger.domain");
                     assertThat(competitions.get(2).getStartDate()).isEqualTo(Instant.parse("2018-03-11T00:00:00Z"));
                     assertThat(competitions.get(2).getEndDate()).isEqualTo(Instant.parse("2018-03-14T00:00:00Z"));
-                }).expectComplete().verify();
+                })
+                .expectComplete()
+                .verify();
+
+        assertThat(mockWebServer.takeRequest().getPath()).isEqualTo("/egw/ranking/json.php");
     }
 
     @Test
     @DisplayName("Should return competitions filtered by category")
-    void shouldReturnCompetitionsFilteredByCategory() throws IOException {
+    void shouldReturnCompetitionsFilteredByCategory() throws Exception {
         mockWebServer.enqueue(
                 new MockResponse()
                         .setResponseCode(200)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(new String(Files.readAllBytes(Paths.get("src/test/resources/find_all.json")))));
+                        .setBody(new String(Files.readAllBytes(Paths.get("src/test/resources/data/ifscResponseInput.json")))));
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
@@ -104,5 +110,7 @@ public class IfscCompetitionsServiceTest {
                 })
                 .expectComplete()
                 .verify();
+
+        assertThat(mockWebServer.takeRequest().getPath()).isEqualTo("/egw/ranking/json.php");
     }
 }

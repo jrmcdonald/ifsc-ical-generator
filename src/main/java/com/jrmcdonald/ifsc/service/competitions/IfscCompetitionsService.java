@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -18,11 +17,10 @@ import static java.util.stream.Collectors.toList;
 public class IfscCompetitionsService implements CompetitionsService {
 
     private final WebClient webClient;
-    private final String ifscRankingUrl;
 
-    public IfscCompetitionsService(@Value("${external.ifsc.ranking.url}") String ifscRankingUrl) {
-        this.ifscRankingUrl = ifscRankingUrl;
+    public IfscCompetitionsService(@Value("${external.ifsc.ranking.host}") String ifscRankingHost) {
         this.webClient = WebClient.builder()
+                .baseUrl(ifscRankingHost)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, StandardCharsets.UTF_8.toString())
                 .build();
     }
@@ -30,7 +28,7 @@ public class IfscCompetitionsService implements CompetitionsService {
     @Override
     public Mono<CompetitionList> findAll() {
         return webClient.get()
-                .uri(URI.create(ifscRankingUrl))
+                .uri("/egw/ranking/json.php")
                 .retrieve()
                 .bodyToMono(CompetitionList.class);
     }

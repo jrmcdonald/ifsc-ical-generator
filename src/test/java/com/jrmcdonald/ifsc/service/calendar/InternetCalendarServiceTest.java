@@ -41,22 +41,22 @@ class InternetCalendarServiceTest {
         Mono<String> calendarMono = calendarService.createCalendar(Mono.just(new CompetitionList(asList(cliffhanger, olympics))));
 
         StepVerifier.create(calendarMono)
-                .assertNext(calendar -> {
-                    ICalendar actual = Biweekly.parse(calendar).first();
-                    assertThat(actual.getEvents()).hasSize(2);
+                .assertNext(calendarString -> {
+                    ICalendar calendar = Biweekly.parse(calendarString).first();
+                    assertThat(calendar.getEvents()).hasSize(2);
 
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
                     try {
-                        assertThat(actual.getEvents().get(0).getSummary().getValue()).isEqualTo("Cliffhanger");
-                        assertThat(actual.getEvents().get(0).getDescription().getValue()).isEqualTo("http://www.cliffhanger.com");
-                        assertThat(actual.getEvents().get(0).getDateStart().getValue()).isEqualTo(formatter.parse("1970-01-01"));
-                        assertThat(actual.getEvents().get(0).getDateEnd().getValue()).isEqualTo(formatter.parse("1970-01-01"));
+                        assertThat(calendar.getEvents().get(0).getSummary().getValue()).isEqualTo("Cliffhanger");
+                        assertThat(calendar.getEvents().get(0).getDescription().getValue()).isEqualTo("http://www.cliffhanger.com");
+                        assertThat(calendar.getEvents().get(0).getDateStart().getValue()).isEqualTo(formatter.parse("1970-01-01"));
+                        assertThat(calendar.getEvents().get(0).getDateEnd().getValue()).isEqualTo(formatter.parse("1970-01-01"));
 
-                        assertThat(actual.getEvents().get(1).getSummary().getValue()).isEqualTo("Olympics");
-                        assertThat(actual.getEvents().get(1).getDescription().getValue()).isEqualTo("http://www.olympics.com");
-                        assertThat(actual.getEvents().get(1).getDateStart().getValue()).isEqualTo(formatter.parse("1970-01-02"));
-                        assertThat(actual.getEvents().get(1).getDateEnd().getValue()).isEqualTo(formatter.parse("1970-01-02"));
+                        assertThat(calendar.getEvents().get(1).getSummary().getValue()).isEqualTo("Olympics");
+                        assertThat(calendar.getEvents().get(1).getDescription().getValue()).isEqualTo("http://www.olympics.com");
+                        assertThat(calendar.getEvents().get(1).getDateStart().getValue()).isEqualTo(formatter.parse("1970-01-02"));
+                        assertThat(calendar.getEvents().get(1).getDateEnd().getValue()).isEqualTo(formatter.parse("1970-01-02"));
                     } catch (ParseException e) {
                         fail("Unexpected exception parsing date", e);
                     }

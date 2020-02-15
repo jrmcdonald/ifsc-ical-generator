@@ -5,4 +5,4 @@ spring:
 external:
   ifsc:
     ranking:
-      url: "http://egw.ifsc-climbing.org/egw/ranking/json.php"
+      host: "http://egw.ifsc-climbing.org"

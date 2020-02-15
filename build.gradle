@@ -34,9 +34,10 @@ dependencies {
 
     implementation "com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}"
     implementation "net.sf.biweekly:biweekly:${biweeklyVersion}"
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.cloud:spring-cloud-function-web'
+    implementation "org.springframework.cloud:spring-cloud-function-adapter-azure:3.0.2.RELEASE"
+    implementation 'org.springframework.cloud:spring-cloud-starter-function-webflux'
 
+    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
     testImplementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     testImplementation "com.squareup.okhttp3:mockwebserver:${okhttpVersion}"
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
