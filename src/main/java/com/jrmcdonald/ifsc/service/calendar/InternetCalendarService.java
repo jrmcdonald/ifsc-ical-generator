@@ -3,7 +3,8 @@ package com.jrmcdonald.ifsc.service.calendar;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import com.jrmcdonald.ifsc.model.Competition;
-import com.jrmcdonald.ifsc.model.CompetitionList;
+import com.jrmcdonald.ifsc.service.competitions.CompetitionsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -14,11 +15,14 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
 @Service
+@RequiredArgsConstructor
 public class InternetCalendarService implements CalendarService {
 
+    private final CompetitionsService competitionsService;
+
     @Override
-    public Mono<String> createCalendar(Mono<CompetitionList> competitionListMono) {
-        return competitionListMono
+    public Mono<String> createCalendar(Mono<List<String>> categoriesMono) {
+        return competitionsService.findByCategory(categoriesMono)
                 .flatMap(competitions -> Mono.just(competitions.getCompetitions()))
                 .flatMap(this::mapEventsToCalendar);
     }

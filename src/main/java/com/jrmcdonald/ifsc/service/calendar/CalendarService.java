@@ -1,8 +1,9 @@
 package com.jrmcdonald.ifsc.service.calendar;
 
-import com.jrmcdonald.ifsc.model.CompetitionList;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 public interface CalendarService {
-    Mono<String> createCalendar(Mono<CompetitionList> competitions);
+    Mono<String> createCalendar(Mono<List<String>> categoriesMono);
 }

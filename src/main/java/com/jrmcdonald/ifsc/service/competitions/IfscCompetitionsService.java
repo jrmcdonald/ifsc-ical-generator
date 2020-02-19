@@ -34,12 +34,13 @@ public class IfscCompetitionsService implements CompetitionsService {
     }
 
     @Override
-    public Mono<CompetitionList> findByCategory(List<String> categories) {
-        return findAll()
-                .map(competitionList ->
-                        competitionList.getCompetitions()
-                                .stream()
-                                .filter(competition -> categories.contains(competition.getCategory()))
-                                .collect(collectingAndThen(toList(), CompetitionList::new)));
+    public Mono<CompetitionList> findByCategory(Mono<List<String>> categoriesMono) {
+        return categoriesMono.flatMap(categories ->
+                findAll()
+                        .map(competitionList ->
+                                competitionList.getCompetitions()
+                                        .stream()
+                                        .filter(competition -> categories.contains(competition.getCategory()))
+                                        .collect(collectingAndThen(toList(), CompetitionList::new))));
     }
 }

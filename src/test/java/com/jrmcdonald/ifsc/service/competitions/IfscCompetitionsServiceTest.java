@@ -3,7 +3,6 @@ package com.jrmcdonald.ifsc.service.competitions;
 import com.jrmcdonald.ifsc.model.Competition;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,8 +74,7 @@ public class IfscCompetitionsServiceTest {
                     assertThat(competitions.get(2).getStartDate()).isEqualTo(Instant.parse("2018-03-11T00:00:00Z"));
                     assertThat(competitions.get(2).getEndDate()).isEqualTo(Instant.parse("2018-03-14T00:00:00Z"));
                 })
-                .expectComplete()
-                .verify();
+                .verifyComplete();
 
         assertThat(mockWebServer.takeRequest().getPath()).isEqualTo("/egw/ranking/json.php");
     }
@@ -92,7 +90,7 @@ public class IfscCompetitionsServiceTest {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-        StepVerifier.create(service.findByCategory(singletonList("69")))
+        StepVerifier.create(service.findByCategory(Mono.just(singletonList("69"))))
                 .assertNext(competitionList -> {
                     assertThat(competitionList.getCompetitions()).hasSize(1);
 
@@ -108,8 +106,7 @@ public class IfscCompetitionsServiceTest {
                         fail("Unexpected exception parsing date", e);
                     }
                 })
-                .expectComplete()
-                .verify();
+                .verifyComplete();
 
         assertThat(mockWebServer.takeRequest().getPath()).isEqualTo("/egw/ranking/json.php");
     }

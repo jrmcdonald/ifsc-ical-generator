@@ -37,6 +37,10 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-function-adapter-azure:3.0.2.RELEASE"
     implementation 'org.springframework.cloud:spring-cloud-starter-function-webflux'
 
+
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
     testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
     testImplementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     testImplementation "com.squareup.okhttp3:mockwebserver:${okhttpVersion}"

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CompetitionsService {
     Mono<CompetitionList> findAll();
-    Mono<CompetitionList> findByCategory(List<String> categories);
+    Mono<CompetitionList> findByCategory(Mono<List<String>> categories);
 }
