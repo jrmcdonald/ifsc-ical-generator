@@ -60,3 +60,8 @@ jobs:
         asset_path: ./build/libs/ifsc-ical-generator-${{ steps.set_release_version.outputs.release_version }}.jar
         asset_name: ifsc-ical-generator-${{ steps.set_release_version.outputs.release_version }}.jar
         asset_content_type: application/java-archive
+
+    - name: Docker Release
+      run: |
+        docker login -u jrmcdonald -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
+        ./gradlew jib

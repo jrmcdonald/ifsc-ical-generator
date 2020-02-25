@@ -50,3 +50,12 @@ jobs:
       
     - name: Sonar
       run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} -Dsonar.branch.name=$(git branch --show-current) ${PR_NUMBER_OPT} --info
+
+    - name: Docker Build
+      run: ./gradlew jibDockerBuild -Djib.to.tags=latest
+
+    - name: Scan image
+      uses: anchore/scan-action@master
+      with:
+        image-reference: "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:latest"
+        fail-build: true

@@ -14,6 +14,7 @@ plugins {
     id 'jacoco'
     id 'com.github.ben-manes.versions' version "${versionsPluginVersion}"
     id 'com.github.spotbugs' version "${spotbugsPluginVersion}"
+    id 'com.google.cloud.tools.jib' version "${googleJibPluginVersion}"
     id 'org.springframework.boot' version "${springBootPluginVersion}"
     id "org.owasp.dependencycheck" version "${dependencyCheckPluginVersion}"
     id 'org.sonarqube' version "${sonarqubePluginVersion}"
@@ -76,6 +77,13 @@ jacocoTestReport {
         html.enabled = true
         xml.enabled = true
         csv.enabled = false
+    }
+}
+
+jib {
+    to {
+        image = "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:${project.version}"
+        credHelper = "osxkeychain"
     }
 }
 
