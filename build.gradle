@@ -83,7 +83,6 @@ jacocoTestReport {
 jib {
     to {
         image = "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:${project.version}"
-        credHelper = "osxkeychain"
     }
 }
 
