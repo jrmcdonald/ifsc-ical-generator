@@ -41,9 +41,6 @@ class InternetCalendarServiceTest {
     @Mock
     private CompetitionsService competitionsService;
 
-    @Captor
-    ArgumentCaptor<Mono<List<String>>> categoriesMonoCaptor;
-
     @BeforeEach
     void beforeEach() {
         calendarService = new InternetCalendarService(competitionsService);
@@ -55,8 +52,44 @@ class InternetCalendarServiceTest {
     }
 
     @Test
-    @DisplayName("Should create a calendar from competitions")
-    void shouldCreateACalendarFromCompetitions() {
+    @DisplayName("Should create calendar")
+    void shouldCreateCalendar() {
+        Instant epoch = Instant.EPOCH;
+        Instant epochPlusOne = Instant.EPOCH.plus(1, ChronoUnit.DAYS);
+
+        Competition cliffhanger = new Competition("Cliffhanger", "http://www.cliffhanger.com", "70", epoch, epoch);
+        Competition olympics = new Competition("Olympics", "http://www.olympics.com", "70", epochPlusOne, epochPlusOne);
+
+        when(competitionsService.findAll()).thenReturn(Mono.just(new CompetitionList(asList(cliffhanger, olympics))));
+
+        Mono<String> calendarMono = calendarService.createCalendar();
+
+        StepVerifier.create(calendarMono)
+                .assertNext(calendarString -> {
+                    ICalendar calendar = Biweekly.parse(calendarString).first();
+                    assertThat(calendar.getEvents()).hasSize(2);
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+                    try {
+                        assertThat(calendar.getEvents().get(0).getSummary().getValue()).isEqualTo("Cliffhanger");
+                        assertThat(calendar.getEvents().get(0).getDescription().getValue()).isEqualTo("http://www.cliffhanger.com");
+                        assertThat(calendar.getEvents().get(0).getDateStart().getValue()).isEqualTo(formatter.parse("1970-01-01"));
+                        assertThat(calendar.getEvents().get(0).getDateEnd().getValue()).isEqualTo(formatter.parse("1970-01-01"));
+
+                        assertThat(calendar.getEvents().get(1).getSummary().getValue()).isEqualTo("Olympics");
+                        assertThat(calendar.getEvents().get(1).getDescription().getValue()).isEqualTo("http://www.olympics.com");
+                        assertThat(calendar.getEvents().get(1).getDateStart().getValue()).isEqualTo(formatter.parse("1970-01-02"));
+                        assertThat(calendar.getEvents().get(1).getDateEnd().getValue()).isEqualTo(formatter.parse("1970-01-02"));
+                    } catch (ParseException e) {
+                        fail("Unexpected exception parsing date", e);
+                    }
+                }).verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should create calendar filtered by categories")
+    void shouldCreateCalendarFilteredByCategories() {
         Instant epoch = Instant.EPOCH;
         Instant epochPlusOne = Instant.EPOCH.plus(1, ChronoUnit.DAYS);
 
@@ -89,13 +122,6 @@ class InternetCalendarServiceTest {
                     } catch (ParseException e) {
                         fail("Unexpected exception parsing date", e);
                     }
-                })
-                .verifyComplete();
-
-        verify(competitionsService).findByCategory(categoriesMonoCaptor.capture());
-
-        StepVerifier.create(categoriesMonoCaptor.getValue()).assertNext(categoriesList -> {
-            assertThat(categoriesList).containsOnly("69");
-        });
+                }).verifyComplete();
     }
 }

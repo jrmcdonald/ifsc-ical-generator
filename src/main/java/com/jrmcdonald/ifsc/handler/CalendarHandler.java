@@ -18,6 +18,12 @@ public class CalendarHandler {
 
     private final CalendarService calendarService;
 
+    public Mono<ServerResponse> getCalendar(ServerRequest serverRequest) {
+        return ServerResponse.ok()
+                .header("Content-Type", "text/calendar")
+                .body(calendarService.createCalendar(), String.class);
+    }
+
     public Mono<ServerResponse> getCalendarByCategory(ServerRequest serverRequest) {
         Mono<List<String>> categoriesMono = serverRequest.bodyToMono(new ParameterizedTypeReference<>() {});
         Mono<String> calendar = calendarService.createCalendar(categoriesMono);
