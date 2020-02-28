@@ -21,6 +21,13 @@ public class InternetCalendarService implements CalendarService {
     private final CompetitionsService competitionsService;
 
     @Override
+    public Mono<String> createCalendar() {
+        return competitionsService.findAll()
+                .flatMap(competitions -> Mono.just(competitions.getCompetitions()))
+                .flatMap(this::mapEventsToCalendar);
+    }
+
+    @Override
     public Mono<String> createCalendar(Mono<List<String>> categoriesMono) {
         return competitionsService.findByCategory(categoriesMono)
                 .flatMap(competitions -> Mono.just(competitions.getCompetitions()))
