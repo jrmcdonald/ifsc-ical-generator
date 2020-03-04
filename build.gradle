@@ -35,7 +35,7 @@ dependencies {
 
     implementation "com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}"
     implementation "net.sf.biweekly:biweekly:${biweeklyVersion}"
-    implementation "org.springframework.cloud:spring-cloud-function-adapter-azure:3.0.2.RELEASE"
+    implementation "org.springframework.cloud:spring-cloud-function-adapter-azure:3.0.3.RELEASE"
     implementation 'org.springframework.cloud:spring-cloud-starter-function-webflux'
 
 
