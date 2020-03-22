@@ -7,7 +7,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -24,8 +28,13 @@ import java.util.Locale;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class IfscCompetitionsServiceTest {
+
+    @Mock
+    IfscCompetitionsConfig config;
 
     private MockWebServer mockWebServer;
     private CompetitionsService service;
@@ -33,7 +42,8 @@ public class IfscCompetitionsServiceTest {
     @BeforeEach
     void beforeEach() {
         mockWebServer = new MockWebServer();
-        service = new IfscCompetitionsService(mockWebServer.url("/").toString());
+        when(config.getHost()).thenReturn(mockWebServer.url("/").toString());
+        service = new IfscCompetitionsService(config);
     }
 
     @AfterEach
@@ -46,7 +56,7 @@ public class IfscCompetitionsServiceTest {
     void shouldReturnCompetitions() throws Exception {
         mockWebServer.enqueue(
                 new MockResponse()
-                        .setResponseCode(200)
+                        .setResponseCode(HttpStatus.OK.value())
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .setBody(new String(Files.readAllBytes(Paths.get("src/test/resources/data/ifscResponseInput.json")))));
 
@@ -84,7 +94,7 @@ public class IfscCompetitionsServiceTest {
     void shouldReturnCompetitionsFilteredByCategory() throws Exception {
         mockWebServer.enqueue(
                 new MockResponse()
-                        .setResponseCode(200)
+                        .setResponseCode(HttpStatus.OK.value())
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .setBody(new String(Files.readAllBytes(Paths.get("src/test/resources/data/ifscResponseInput.json")))));
 
