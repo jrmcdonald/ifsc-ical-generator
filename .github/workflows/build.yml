@@ -1,6 +1,8 @@
 name: Java Build
 
 on:
+  schedule:
+    - cron: '0 4 * * 1'
   push:
     branches:
       - '*'
