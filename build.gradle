@@ -10,7 +10,9 @@ buildscript {
 }
 
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'java-test-fixtures'
+
     id 'jacoco'
     id 'com.github.ben-manes.versions' version "${versionsPluginVersion}"
     id 'com.github.spotbugs' version "${spotbugsPluginVersion}"
@@ -49,6 +51,14 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'io.projectreactor:reactor-test'
+
+    testFixturesCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testFixturesAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    testFixturesImplementation "com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}"
+    testFixturesImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    testFixturesApi "com.squareup.okhttp3:mockwebserver:${okhttpVersion}"
+    testFixturesApi "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
 }
 
 dependencyManagement {
@@ -66,6 +76,9 @@ compileJava {
 
 test {
     useJUnitPlatform()
+    // Make sure the classes dir is used on the test classpath.
+    // When test fixtures are involved, the JAR is used by default
+    classpath = sourceSets.main.output.classesDirs + classpath - files(jar.archiveFile)
 }
 
 jacoco {
