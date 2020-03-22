@@ -2,7 +2,8 @@ spring:
   main:
     banner-mode: off
 
-external:
-  ifsc:
-    ranking:
-      host: "http://egw.ifsc-climbing.org"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
