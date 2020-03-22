@@ -1,0 +1,19 @@
+{
+  "name": "ifsc-ical-generator",
+  "version": "0.3.0",
+  "main": "index.js",
+  "repository": "git@github.com:jrmcdonald/ifsc-ical-generator.git",
+  "author": "Jamie McDonald <jamie@qwyck.net>",
+  "license": "MIT",
+  "dependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}

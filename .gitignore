@@ -3,6 +3,7 @@
 *.jar
 *.zip
 **/build
+node_modules/
 
 !gradle/wrapper/*.jar
 .DS_Store
