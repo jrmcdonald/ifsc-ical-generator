@@ -1,4 +1,10 @@
 spring:
+  application:
+    name: ifsc-ical-generator
+  cloud:
+    kubernetes:
+      reload:
+        enabled: true
   main:
     banner-mode: off
 

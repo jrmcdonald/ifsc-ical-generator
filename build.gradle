@@ -37,7 +37,7 @@ dependencies {
     implementation "net.sf.biweekly:biweekly:${biweeklyVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-function-webflux'
-
+    implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-all'
 
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"

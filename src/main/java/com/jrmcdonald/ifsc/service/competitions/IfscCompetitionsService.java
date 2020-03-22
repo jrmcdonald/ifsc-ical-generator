@@ -1,7 +1,6 @@
 package com.jrmcdonald.ifsc.service.competitions;
 
 import com.jrmcdonald.ifsc.model.CompetitionList;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,9 +17,9 @@ public class IfscCompetitionsService implements CompetitionsService {
 
     private final WebClient webClient;
 
-    public IfscCompetitionsService(@Value("${external.ifsc.ranking.host}") String ifscRankingHost) {
-        this.webClient = WebClient.builder()
-                .baseUrl(ifscRankingHost)
+    public IfscCompetitionsService(IfscCompetitionsConfig config) {
+        webClient = WebClient.builder()
+                .baseUrl(config.getHost())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, StandardCharsets.UTF_8.toString())
                 .build();
     }
