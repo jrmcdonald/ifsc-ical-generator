@@ -1,11 +1,11 @@
-import com.github.spotbugs.SpotBugsTask
+//import com.github.spotbugs.SpotBugsTask
 
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.owasp:dependency-check-gradle:5.3.1'
+        classpath "org.owasp:dependency-check-gradle:${dependencyCheckPluginVersion}"
     }
 }
 
@@ -35,7 +35,6 @@ dependencies {
 
     implementation "com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}"
     implementation "net.sf.biweekly:biweekly:${biweeklyVersion}"
-    implementation "org.springframework.cloud:spring-cloud-function-adapter-azure:3.0.2.RELEASE"
     implementation 'org.springframework.cloud:spring-cloud-starter-function-webflux'
 
 
@@ -104,14 +103,13 @@ dependencyCheck {
 }
 
 spotbugs {
-    toolVersion = "${spotbugsToolVersion}"
-    ignoreFailures = true // TODO: Remove and fix issues
+    toolVersion.set("${spotbugsToolVersion}")
 }
 
-tasks.withType(SpotBugsTask) {
+spotbugsMain{
     reports {
-        xml.enabled = false
-        html.enabled = true
+        xml.enabled(false)
+        html.enabled(true)
     }
     spotbugsTest.enabled = false
 }
