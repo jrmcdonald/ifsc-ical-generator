@@ -1,15 +1,15 @@
 {
-  "name": "ifsc-ical-generator",
-  "version": "0.3.0",
-  "main": "index.js",
-  "repository": "git@github.com:jrmcdonald/ifsc-ical-generator.git",
-  "author": "Jamie McDonald <jamie@qwyck.net>",
-  "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@semantic-release/git": "^9.0.0",
+    "gradle-semantic-release-plugin": "^1.4.1",
     "husky": "^4.2.3",
-    "lint-staged": "^10.0.8"
+    "lint-staged": "^10.0.8",
+    "semantic-release": "^17.0.4"
+  },
+  "scripts": {
+    "semantic-release": "semantic-release"
   },
   "husky": {
     "hooks": {
@@ -20,6 +20,30 @@
   "lint-staged": {
     "*.md,package.json": [
       "prettier --write"
+    ]
+  },
+  "release": {
+    "branches": ["master", "feature/37-semantic-release"],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "gradle-semantic-release-plugin",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "gradle.properties"
+          ]
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            "build/libs/*.jar"
+          ]
+        }
+      ]
     ]
   }
 }
