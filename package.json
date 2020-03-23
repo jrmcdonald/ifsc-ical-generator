@@ -23,7 +23,9 @@
     ]
   },
   "release": {
-    "branches": ["master", "feature/37-semantic-release"],
+    "branches": [
+      "master"
+    ],
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
@@ -36,14 +38,7 @@
           ]
         }
       ],
-      [
-        "@semantic-release/github",
-        {
-          "assets": [
-            "build/libs/*.jar"
-          ]
-        }
-      ]
+      "@semantic-release/github"
     ]
   }
 }
