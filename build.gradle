@@ -1,24 +1,14 @@
-//import com.github.spotbugs.SpotBugsTask
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.owasp:dependency-check-gradle:${dependencyCheckPluginVersion}"
-    }
-}
-
 plugins {
     id 'java-library'
     id 'java-test-fixtures'
-
+    id 'maven-publish'
     id 'jacoco'
     id 'com.github.ben-manes.versions' version "${versionsPluginVersion}"
     id 'com.github.spotbugs' version "${spotbugsPluginVersion}"
     id 'com.google.cloud.tools.jib' version "${googleJibPluginVersion}"
+    id 'com.gtramontina.ghooks.gradle' version "${ghooksPluginVersion}"
     id 'org.springframework.boot' version "${springBootPluginVersion}"
-    id "org.owasp.dependencycheck" version "${dependencyCheckPluginVersion}"
+    id 'org.owasp.dependencycheck' version "${dependencyCheckPluginVersion}"
     id 'org.sonarqube' version "${sonarqubePluginVersion}"
     id 'io.spring.dependency-management' version "${springDependencyManagementPluginVersion}"
     id 'project-report'
@@ -81,6 +71,24 @@ test {
     classpath = sourceSets.main.output.classesDirs + classpath - files(jar.archiveFile)
 }
 
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/jrmcdonald/ifsc-ical-generator")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
 jacoco {
     toolVersion = "${jacocoToolVersion}"
 }
@@ -114,6 +122,9 @@ dependencyUpdates.resolutionStrategy {
 
 dependencyCheck {
     format = 'ALL'
+    analyzers {
+        nodeEnabled = false
+    }
 }
 
 spotbugs {
