@@ -48,7 +48,7 @@ jobs:
         yarn audit
         yarn semantic-release
       env:
-        GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
 
     - name: Docker Release
       if: github.event_name != 'pull_request'

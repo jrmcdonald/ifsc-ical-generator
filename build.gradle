@@ -47,8 +47,8 @@ dependencies {
 
     testFixturesImplementation "com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}"
     testFixturesImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
-    testFixturesApi "com.squareup.okhttp3:mockwebserver:${okhttpVersion}"
-    testFixturesApi "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+    testFixturesImplementation "com.squareup.okhttp3:mockwebserver:${okhttpVersion}"
+    testFixturesImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
 }
 
 dependencyManagement {
@@ -64,6 +64,11 @@ compileJava {
     options.compilerArgs << "-Xlint:-processing"
 }
 
+compileTestFixturesJava {
+    options.compilerArgs << "-nowarn"
+    options.compilerArgs << "-Xlint:none"
+}
+
 test {
     useJUnitPlatform()
     // Make sure the classes dir is used on the test classpath.
@@ -77,8 +82,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/jrmcdonald/ifsc-ical-generator")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+                username = "jrmcdonald"
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
