@@ -52,6 +52,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Docker Release
+      if: github.event_name != 'pull_request'
       run: |
         docker login -u jrmcdonald -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
         ./gradlew jib
