@@ -41,6 +41,16 @@ jobs:
       with:
         java-version: 1.11
 
+    - name: Set up Node 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: Yarn Audit
+      run: |
+        yarn install --frozen-lockfile
+        yarn audit
+
     - name: Set up Gradle
       run: chmod +x gradlew
 
