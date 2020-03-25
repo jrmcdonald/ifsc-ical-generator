@@ -1,4 +1,4 @@
-name: Java Build
+name: build
 
 on:
   schedule:
@@ -49,12 +49,15 @@ jobs:
         yarn install --frozen-lockfile
         yarn audit
 
+    - name: Validate Gradle Wrapper
+      uses: gradle/wrapper-validation-action@v1
+
     - name: Set up Gradle
       run: chmod +x gradlew
 
     - name: Build
       run: ./gradlew build
-      
+
     - name: Set PR Number
       if: github.event_name == 'pull_request'
       run: |
