@@ -42,15 +42,13 @@ jobs:
       run: ./gradlew build
 
     - name: Semantic Release
-      run: |
-        yarn install --frozen-lockfile
-        yarn audit
-        yarn semantic-release
+      uses: cycjimmy/semantic-release-action@v2
+      id: semantic
       env:
         GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
 
     - name: Docker Release
-      if: github.event_name != 'pull_request'
+      if: steps.semantic.outputs.new_release_published == 'true'
       run: |
         docker login -u jrmcdonald -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
         ./gradlew jib
