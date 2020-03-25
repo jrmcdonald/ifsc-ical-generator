@@ -15,9 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 50
-    - run: |
-        git fetch --no-tags --prune --depth=1 origin master
+        fetch-depth: 0
+        persist-credentials: 'false'
 
     - uses: actions/cache@v1
       with:
