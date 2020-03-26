@@ -1,4 +1,4 @@
-# IFSC iCalendar Generator ![GitHub release (latest by date)](https://img.shields.io/github/v/release/jrmcdonald/ifsc-ical-generator) ![build](https://github.com/jrmcdonald/ifsc-ical-generator/workflows/release/badge.svg) ![release](https://github.com/jrmcdonald/ifsc-ical-generator/workflows/release/badge.svg) ![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/jrmcdonald_ifsc-ical-generator?server=https%3A%2F%2Fsonarcloud.io)
+# IFSC iCalendar Generator ![GitHub release (latest by date)](https://img.shields.io/github/v/release/jrmcdonald/ifsc-ical-generator) ![build](https://github.com/jrmcdonald/ifsc-ical-generator/workflows/release/badge.svg) ![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/jrmcdonald_ifsc-ical-generator?server=https%3A%2F%2Fsonarcloud.io)
 
 The IFSC iCalendar Generator is a utility that allows anyone to generate an iCalendar file containing the IFSC competition schedule for importing into calendar applications.
 
