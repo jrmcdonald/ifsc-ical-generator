@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "ifsc-ical-generator.fullname" . }}-test-connection"
+  labels:
+  {{- include "ifsc-ical-generator.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "ifsc-ical-generator.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
