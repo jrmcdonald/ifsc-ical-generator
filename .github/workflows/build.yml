@@ -92,6 +92,7 @@ jobs:
       with:
         extra_plugins: |
           gradle-semantic-release-plugin
+          @semantic-release/exec
           @semantic-release/git
       env:
         GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
