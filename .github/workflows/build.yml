@@ -92,6 +92,7 @@ jobs:
       with:
         extra_plugins: |
           gradle-semantic-release-plugin
+          @semantic-release/exec
           @semantic-release/git
       env:
         GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
@@ -101,6 +102,8 @@ jobs:
       run: |
         docker login -u jrmcdonald -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
         ./gradlew jib
+        docker login -u jrmcdonald -p ${{ secrets.DOCKER_IO_TOKEN }}
+        ./gradlew jib -Djib.to.image=jrmcdonald/ifsc-ical-generator:${{ steps.semantic.outputs.release_version }}
         
     - uses: actions/upload-artifact@v1
       if: always()

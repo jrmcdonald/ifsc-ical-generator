@@ -43,7 +43,13 @@
           ]
         }
       ],
-      "@semantic-release/github"
+      "@semantic-release/github",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "./scripts/helm-semantic-release.sh ${nextRelease.version} charts/ifsc-ical-generator/Chart.yaml"
+        }
+      ]
     ]
   }
 }

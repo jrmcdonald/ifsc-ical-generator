@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ifsc-ical-generator.fullname" . }}
+  labels:
+  {{- include "ifsc-ical-generator.labels" . | nindent 4 }}
+data:
+  application.yml: |-
+  {{- toYaml .Values.applicationConfig | nindent 4 }}

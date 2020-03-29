@@ -17,7 +17,7 @@ To run the utility, follow these steps:
 
 Docker:
 ```shell script
-docker run --rm --name ifsc-ical-generator -e SPRING_PROFILES_ACTIVE=local -p 8080:8080 docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:<version>
+docker run --rm --name ifsc-ical-generator -e SPRING_PROFILES_ACTIVE=local -p 8080:8080 jrmcdonald/ifsc-ical-generator:<version>
 ```
 
 Java:

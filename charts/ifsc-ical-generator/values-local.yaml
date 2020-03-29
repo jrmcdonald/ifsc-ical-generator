@@ -1,0 +1,6 @@
+ingress:
+  hosts:
+    - host: ifsc.local
+      paths: ["/"]
+  tls: []
+
