@@ -6,7 +6,7 @@ The utility fetches JSON data from the [IFSC ranking endpoint](http://egw.ifsc-c
 
 ## Prerequisites
 
-In order to get started you need either of the following installed locally
+In order to get started you need either of the following installed locally:
 
 * Docker
 * Java 11
@@ -35,6 +35,27 @@ curl -X GET -H "Content-Type: application/json" localhost:8080/calendar
 To make a request for competitions in specific categories a JSON array of category numbers should be passed in the request body:
 ```shell script
 curl -X POST -H "Content-Type: application/json" -d '["69","68","262","256","70"]' localhost:8080/calendar
+```
+
+## Local Development
+
+To develop locally you need the following software installed
+
+* Docker
+* Java 11
+* Node 12
+* Yarn
+* Helm
+* Skaffold
+
+To create a local Kubernetes cluster, correctly configured for ingress:
+```shell script
+./scripts/kind-setup.sh
+```
+
+To deploy the application to the local cluster and watch for changes:
+```shell script
+skaffold dev --profile=local
 ```
 
 ## License

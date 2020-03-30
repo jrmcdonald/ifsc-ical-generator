@@ -1,0 +1,23 @@
+apiVersion: skaffold/v2beta1
+kind: Config
+metadata:
+  name:
+profiles:
+  - name: local
+    build:
+      artifacts:
+        - image: ifsc-ical-generator
+          jib: {}
+    deploy:
+      helm:
+        releases:
+          - name: ifsc-ical-generator
+            chartPath: charts/ifsc-ical-generator
+            imageStrategy:
+              helm:
+                explicitRegistry: false
+            values:
+              image: ifsc-ical-generator
+            valuesFiles:
+              - charts/ifsc-ical-generator/values.yaml
+              - charts/ifsc-ical-generator/values-local.yaml
