@@ -47,15 +47,19 @@ probes:
     httpGet:
       path: /actuator/health
       port: http
-    initialDelaySeconds: 25
     periodSeconds: 5
     failureThreshold: 1
   readinessProbe:
     httpGet:
       path: /actuator/health
       port: http
-    initialDelaySeconds: 25
     periodSeconds: 5
+  startupProbe:
+    httpGet:
+      path: /actuator/health
+      port: http
+    periodSeconds: 3
+    failureThreshold: 15
 
 resources:
   limits:

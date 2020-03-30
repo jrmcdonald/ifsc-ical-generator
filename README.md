@@ -4,14 +4,16 @@ The IFSC iCalendar Generator is a utility that allows anyone to generate an iCal
 
 The utility fetches JSON data from the [IFSC ranking endpoint](http://egw.ifsc-climbing.org/egw/ranking/json.php) and converts it into the iCalendar format.
 
-## Prerequisites
+## Running Locally
+
+### Prerequisites
 
 In order to get started you need either of the following installed locally:
 
 * Docker
 * Java 11
 
-## Running
+### Running
 
 To run the utility, follow these steps:
 
@@ -25,7 +27,7 @@ Java:
 SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 ```
 
-## Making requests
+### Making requests
 
 To make a request for all competitions:
 ```shell script
@@ -53,9 +55,14 @@ To create a local Kubernetes cluster, correctly configured for ingress:
 ./scripts/kind-setup.sh
 ```
 
+Add the following line to your hosts file:
+```text
+127.0.0.1 ifsc.local
+```
+
 To deploy the application to the local cluster and watch for changes:
 ```shell script
-skaffold dev --profile=local
+skaffold dev --profile=local --force=false
 ```
 
 ## License
