@@ -20,8 +20,8 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: {{ include "ifsc-ical-generator.serviceAccountName" . }}
-    apiGroup: ""
+    namespace: default
 roleRef:
   kind: Role
   name: {{ include "ifsc-ical-generator.fullname" . }}
-  apiGroup: ""
+  apiGroup: rbac.authorization.k8s.io
