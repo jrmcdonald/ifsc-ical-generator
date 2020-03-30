@@ -47,7 +47,7 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": "./scripts/helm-semantic-release.sh ${nextRelease.version} charts/ifsc-ical-generator/Chart.yaml"
+          "prepareCmd": "./scripts/helm-semantic-release.sh ${nextRelease.version} charts/ifsc-ical-generator/values.yaml"
         }
       ]
     ]
