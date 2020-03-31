@@ -62,7 +62,7 @@ Add the following line to your hosts file:
 
 To deploy the application to the local cluster and watch for changes:
 ```shell script
-skaffold dev --profile=local --force=false
+skaffold dev --force=false
 ```
 
 ## License
