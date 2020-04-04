@@ -10,6 +10,7 @@ deploy:
   helm:
     releases:
       - name: ifsc-ical-generator
+        namespace: ifsc-local
         chartPath: qwyck/ifsc-ical-generator
         imageStrategy:
           helm:
