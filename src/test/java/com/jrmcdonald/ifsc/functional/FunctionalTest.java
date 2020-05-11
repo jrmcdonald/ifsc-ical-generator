@@ -14,6 +14,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -27,6 +28,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith({SpringExtension.class, MockWebServerExtension.class})
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ContextConfiguration(initializers = FunctionalTestConfiguration.Initializer.class)
+@ActiveProfiles("local")
 public class FunctionalTest {
 
     @LocalServerPort
