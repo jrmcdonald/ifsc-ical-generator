@@ -1,17 +1,19 @@
-package com.jrmcdonald.ifsc.handler;
+package com.jrmcdonald.ifsc.controller;
 
-import com.jrmcdonald.ifsc.config.RouterConfig;
+import com.jrmcdonald.ifsc.Application;
 import com.jrmcdonald.ifsc.service.calendar.CalendarService;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -23,26 +25,24 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ExtendWith(MockitoExtension.class)
-class CalendarHandlerTest {
+@AutoConfigureWebTestClient
+@SpringBootTest(classes = Application.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
+@ActiveProfiles("test")
+class CalendarControllerTest {
 
-    @Mock
+    @MockBean
     CalendarService calendarService;
 
     @Captor
-    ArgumentCaptor<Mono<List<String>>> categoriesMonoCaptor;
+    ArgumentCaptor<List<String>> categoriesCaptor;
 
+    @Autowired
     private WebTestClient client;
-
-    @BeforeEach
-    void beforeEach() {
-        CalendarHandler calendarHandler = new CalendarHandler(calendarService);
-        RouterConfig routerConfig = new RouterConfig();
-        client = WebTestClient.bindToRouterFunction(routerConfig.route(calendarHandler)).build();
-    }
 
     @AfterEach
     void afterEach() {
@@ -58,20 +58,21 @@ class CalendarHandlerTest {
 
         FluxExchangeResult<String> exchangeResult = client.get()
                 .uri("/calendar")
-                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectHeader()
-                .contentType("text/calendar")
+                .contentType("text/calendar;charset=UTF-8")
                 .returnResult(String.class);
 
         StepVerifier.create(exchangeResult.getResponseBody()).assertNext(result -> {
             assertThat(result).isEqualTo(expectedValue);
         }).verifyComplete();
+
+        verify(calendarService).createCalendar();
     }
 
     @Test
     @DisplayName("Should execute service with categories")
-    void shouldExecuteServiceeWithCategories() {
+    void shouldExecuteServiceWithCategories() {
         String expectedValue = "ICALENDAR_VALUE";
 
         when(calendarService.createCalendar(any())).thenReturn(Mono.just(expectedValue));
@@ -79,20 +80,17 @@ class CalendarHandlerTest {
         FluxExchangeResult<String> exchangeResult = client.post()
                 .uri("/calendar")
                 .bodyValue(singletonList("69"))
-                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectHeader()
-                .contentType("text/calendar")
+                .contentType("text/calendar;charset=UTF-8")
                 .returnResult(String.class);
 
         StepVerifier.create(exchangeResult.getResponseBody()).assertNext(result -> {
             assertThat(result).isEqualTo(expectedValue);
         }).verifyComplete();
 
-        verify(calendarService).createCalendar(categoriesMonoCaptor.capture());
-
-        StepVerifier.create(categoriesMonoCaptor.getValue()).assertNext(categoriesList -> {
-            assertThat(categoriesList).containsOnly("69");
-        });
+        verify(calendarService).createCalendar(categoriesCaptor.capture());
+        assertThat(categoriesCaptor.getValue()).containsOnly("69");
     }
+
 }

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CalendarService {
     Mono<String> createCalendar();
-    Mono<String> createCalendar(Mono<List<String>> categoriesMono);
+    Mono<String> createCalendar(List<String> categories);
 }

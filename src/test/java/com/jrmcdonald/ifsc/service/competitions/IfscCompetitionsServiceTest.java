@@ -1,5 +1,6 @@
 package com.jrmcdonald.ifsc.service.competitions;
 
+import com.jrmcdonald.ifsc.logging.WebFluxLogger;
 import com.jrmcdonald.ifsc.model.Competition;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -13,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
@@ -28,6 +28,7 @@ import java.util.Locale;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +37,9 @@ public class IfscCompetitionsServiceTest {
     @Mock
     IfscCompetitionsConfig config;
 
+    @Mock
+    WebFluxLogger webFluxLogger;
+
     private MockWebServer mockWebServer;
     private CompetitionsService service;
 
@@ -43,7 +47,7 @@ public class IfscCompetitionsServiceTest {
     void beforeEach() {
         mockWebServer = new MockWebServer();
         when(config.getHost()).thenReturn(mockWebServer.url("/").toString());
-        service = new IfscCompetitionsService(config);
+        service = new IfscCompetitionsService(config, webFluxLogger);
     }
 
     @AfterEach
@@ -92,6 +96,8 @@ public class IfscCompetitionsServiceTest {
     @Test
     @DisplayName("Should return competitions filtered by category")
     void shouldReturnCompetitionsFilteredByCategory() throws Exception {
+        when(webFluxLogger.logOnNext(any())).thenReturn(objectSignal -> {});
+
         mockWebServer.enqueue(
                 new MockResponse()
                         .setResponseCode(HttpStatus.OK.value())
@@ -100,7 +106,7 @@ public class IfscCompetitionsServiceTest {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-        StepVerifier.create(service.findByCategory(Mono.just(singletonList("69"))))
+        StepVerifier.create(service.findByCategory(singletonList("69")))
                 .assertNext(competitionList -> {
                     assertThat(competitionList.getCompetitions()).hasSize(1);
 

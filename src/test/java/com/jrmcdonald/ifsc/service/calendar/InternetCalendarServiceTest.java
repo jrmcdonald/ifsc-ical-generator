@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
@@ -29,7 +27,6 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -96,11 +93,11 @@ class InternetCalendarServiceTest {
         Competition cliffhanger = new Competition("Cliffhanger", "http://www.cliffhanger.com", "70", epoch, epoch);
         Competition olympics = new Competition("Olympics", "http://www.olympics.com", "70", epochPlusOne, epochPlusOne);
 
-        Mono<List<String>> categoriesMono = Mono.just(singletonList("69"));
+        List<String> categories = singletonList("69");
 
         when(competitionsService.findByCategory(any())).thenReturn(Mono.just(new CompetitionList(asList(cliffhanger, olympics))));
 
-        Mono<String> calendarMono = calendarService.createCalendar(categoriesMono);
+        Mono<String> calendarMono = calendarService.createCalendar(categories);
 
         StepVerifier.create(calendarMono)
                 .assertNext(calendarString -> {

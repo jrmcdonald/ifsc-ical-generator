@@ -28,7 +28,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith({SpringExtension.class, MockWebServerExtension.class})
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ContextConfiguration(initializers = FunctionalTestConfiguration.Initializer.class)
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 public class FunctionalTest {
 
     @LocalServerPort
@@ -53,10 +53,9 @@ public class FunctionalTest {
 
         client.get()
                 .uri("/calendar")
-                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectHeader()
-                .contentType("text/calendar")
+                .contentType("text/calendar;charset=UTF-8")
                 .expectStatus().isOk();
     }
 }
