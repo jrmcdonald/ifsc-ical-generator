@@ -22,7 +22,7 @@ import static java.lang.System.nanoTime;
 @RequiredArgsConstructor
 public class WebFluxFilter implements WebFilter {
 
-    public static final String CONTEXT_MAP = "context-map";
+    public static final String LOG_CONTEXT_MAP = "log-context";
     public static final String APPLICATION_KEY = "application";
     private static final BigDecimal ONE_MILLION = BigDecimal.valueOf(1E6);
     private static final String DURATION = "duration";
@@ -46,7 +46,7 @@ public class WebFluxFilter implements WebFilter {
                     addDurationAndStatusToMDC(exchange, exchange.getResponse());
                     log.info("Exiting service");
                 }))
-                .subscriberContext(context -> context.put(CONTEXT_MAP, contextMap));
+                .subscriberContext(context -> context.put(LOG_CONTEXT_MAP, contextMap));
     }
 
     private Map<String, String> generateReactorContextMap() {

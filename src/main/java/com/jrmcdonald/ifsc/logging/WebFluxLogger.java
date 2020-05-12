@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.jrmcdonald.ifsc.filter.WebFluxFilter.CONTEXT_MAP;
+import static com.jrmcdonald.ifsc.filter.WebFluxFilter.LOG_CONTEXT_MAP;
 
 public class WebFluxLogger {
     public <T> Consumer<Signal<T>> logOnNext(Consumer<T> log) {
@@ -17,7 +17,7 @@ public class WebFluxLogger {
                 return;
             }
 
-            Optional<Map<String, String>> maybeContextMap = signal.getContext().getOrEmpty(CONTEXT_MAP);
+            Optional<Map<String, String>> maybeContextMap = signal.getContext().getOrEmpty(LOG_CONTEXT_MAP);
 
             if (maybeContextMap.isPresent()) {
                 MDC.setContextMap(maybeContextMap.get());
@@ -34,7 +34,7 @@ public class WebFluxLogger {
 
     public <T> Consumer<Signal<T>> logOnFinally(Runnable log) {
         return signal -> {
-            Optional<Map<String, String>> maybeContextMap = signal.getContext().getOrEmpty(CONTEXT_MAP);
+            Optional<Map<String, String>> maybeContextMap = signal.getContext().getOrEmpty(LOG_CONTEXT_MAP);
 
             if (maybeContextMap.isPresent()) {
                 MDC.setContextMap(maybeContextMap.get());
@@ -55,7 +55,7 @@ public class WebFluxLogger {
                 return;
             }
 
-            Optional<Map<String, String>> maybeContextMap = signal.getContext().getOrEmpty(CONTEXT_MAP);
+            Optional<Map<String, String>> maybeContextMap = signal.getContext().getOrEmpty(LOG_CONTEXT_MAP);
 
             if (maybeContextMap.isPresent()) {
                 MDC.setContextMap(maybeContextMap.get());
