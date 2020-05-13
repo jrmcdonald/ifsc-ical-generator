@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
@@ -100,7 +99,7 @@ public class IfscCompetitionsServiceTest {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-        StepVerifier.create(service.findByCategory(Mono.just(singletonList("69"))))
+        StepVerifier.create(service.findByCategory(singletonList("69")))
                 .assertNext(competitionList -> {
                     assertThat(competitionList.getCompetitions()).hasSize(1);
 

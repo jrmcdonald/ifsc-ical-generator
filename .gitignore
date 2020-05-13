@@ -4,6 +4,7 @@
 *.zip
 **/build
 node_modules/
+yarn-error.log
 
 !gradle/wrapper/*.jar
 .DS_Store

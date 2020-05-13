@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ifsc-ical-generator
+
+external:
+  ifsc:
+    host: "http://egw.ifsc-climbing.org"
