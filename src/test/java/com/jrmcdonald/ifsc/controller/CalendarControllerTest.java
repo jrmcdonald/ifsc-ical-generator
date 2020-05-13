@@ -5,16 +5,13 @@ import com.jrmcdonald.ifsc.service.calendar.CalendarService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -31,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(classes = Application.class)
-@ExtendWith({SpringExtension.class, MockitoExtension.class})
 @ActiveProfiles("test")
 class CalendarControllerTest {
 

@@ -24,18 +24,18 @@ public class InternetCalendarService implements CalendarService {
 
     @Override
     public Mono<String> createCalendar() {
-        log.info("Serving request to create calendar");
         return competitionsService.findAll()
                 .flatMap(competitions -> Mono.just(competitions.getCompetitions()))
-                .flatMap(this::mapEventsToCalendar);
+                .flatMap(this::mapEventsToCalendar)
+                .doFinally(calendar -> log.info("Created calendar for all categories"));
     }
 
     @Override
     public Mono<String> createCalendar(List<String> categories) {
-        log.info("Serving request to create calendar for specified categories");
         return competitionsService.findByCategory(categories)
                 .flatMap(competitions -> Mono.just(competitions.getCompetitions()))
-                .flatMap(this::mapEventsToCalendar);
+                .flatMap(this::mapEventsToCalendar)
+                .doFinally(calendar -> log.info("Created calendar for specified categories"));
     }
 
     private Mono<String> mapEventsToCalendar(List<Competition> competitions) {
