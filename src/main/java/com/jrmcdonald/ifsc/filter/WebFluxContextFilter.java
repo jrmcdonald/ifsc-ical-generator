@@ -48,7 +48,6 @@ public class WebFluxContextFilter implements WebFilter {
                     MDC.clear();
                 })
                 .doFinally(signal -> {
-//                    MDC.setContextMap(reactorContext);
                     addDurationAndStatusToMDC(exchange);
                     log.info("Exiting service");
                 })
