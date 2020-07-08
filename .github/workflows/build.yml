@@ -5,12 +5,14 @@ on:
     - cron: '0 4 * * 1'
   push:
     branches:
-      - '*'
-      - '*/*'
+      - 'main'
   pull_request:
     branches:
       - '*'
       - '*/*'
+
+env:
+  slack-channel: 'status-ci-cd'
 
 jobs:
   build:
@@ -23,90 +25,125 @@ jobs:
       SONAR_LOGIN: ${{ secrets.SONAR_LOGIN }}
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 50
-    - run: |
-        git fetch --no-tags --prune --depth=1 origin master
+      - name: Notify Slack Started
+        uses: voxmedia/github-action-slack-notify-build@v1
+        id: slack
+        with:
+          channel: ${{ env.slack-channel }}
+          status: BUILD STARTED
+          color: warning
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-    - uses: actions/cache@v1
-      with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
- 
-    - name: Set up JDK 1.11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.11
-
-    - name: Set up Node 12
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-
-    - name: Yarn Audit
-      run: |
-        yarn install --frozen-lockfile
-        yarn audit
-
-    - name: Validate Gradle Wrapper
-      uses: gradle/wrapper-validation-action@v1
-
-    - name: Set up Gradle
-      run: chmod +x gradlew
-
-    - name: Build
-      run: ./gradlew build
-
-    - name: Set PR Number
-      if: github.event_name == 'pull_request'
-      run: |
-        export PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        export PR_NUMBER_OPT="-Dsonar.pullrequest.key=${PR_NUMBER}"
-        echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
-
-    - name: Set Branch Name
-      if: github.event_name != 'pull_request'
-      run: |
-        export BRANCH_NAME=$(git branch --show-current)
-        export BRANCH_NAME_OPT="-Dsonar.branch.name={BRANCH_NAME}"
-        echo "::set-env name=BRANCH_NAME_OPT::${BRANCH_NAME_OPT}"
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 50
+      - run: |
+          git fetch --no-tags --prune --depth=1 origin main
       
-    - name: Sonar
-      run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} ${BRANCH_NAME_OPT} ${PR_NUMBER_OPT} --info
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/dependency-check-data
+          key: ${{ runner.os }}-gradle-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+   
+      - name: Set up JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
 
-    - name: Docker Build
-      run: ./gradlew jibDockerBuild -Djib.to.tags=latest
+      - name: Set up Node 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
 
-    - name: Docker Scan
-      uses: anchore/scan-action@master
-      with:
-        image-reference: "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:latest"
-        fail-build: true
+      - name: Yarn Audit
+        run: |
+          yarn install --frozen-lockfile
+          bash scripts/yarn-audit.sh
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Set up Gradle
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Set PR Number
+        if: github.event_name == 'pull_request'
+        run: |
+          export PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          export PR_NUMBER_OPT="-Dsonar.pullrequest.key=${PR_NUMBER}"
+          echo "::set-env name=PR_NUMBER_OPT::${PR_NUMBER_OPT}"
+
+      - name: Set Branch Name
+        if: github.event_name != 'pull_request'
+        run: |
+          export BRANCH_NAME=$(git branch --show-current)
+          export BRANCH_NAME_OPT="-Dsonar.branch.name={BRANCH_NAME}"
+          echo "::set-env name=BRANCH_NAME_OPT::${BRANCH_NAME_OPT}"
         
-    - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v2
-      id: semantic
-      with:
-        extra_plugins: |
-          gradle-semantic-release-plugin
-          @semantic-release/exec
-          @semantic-release/git
-      env:
-        GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+      - name: Sonar
+        run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} ${BRANCH_NAME_OPT} ${PR_NUMBER_OPT} --info
 
-    - name: Docker Release
-      if: steps.semantic.outputs.new_release_published == 'true'
-      run: |
-        docker login -u jrmcdonald -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
-        ./gradlew jib
-        docker login -u jrmcdonald -p ${{ secrets.DOCKER_IO_TOKEN }}
-        ./gradlew jib -Djib.to.image=jrmcdonald/ifsc-ical-generator:${{ steps.semantic.outputs.new_release_version }}
-        
-    - uses: actions/upload-artifact@v1
-      if: always()
-      with:
-        name: reports
-        path: build/reports
+      - name: Docker Build
+        run: ./gradlew jibDockerBuild -Djib.to.tags=latest
+
+      - name: Docker Scan
+        uses: anchore/scan-action@master
+        with:
+          image-reference: "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:latest"
+          fail-build: true
+          
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v2
+        id: semantic
+        with:
+          extra_plugins: |
+            gradle-semantic-release-plugin
+            @semantic-release/exec
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+
+      - name: Docker Release
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          docker login -u jrmcdonald -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
+          ./gradlew jib
+          docker login -u jrmcdonald -p ${{ secrets.DOCKER_IO_TOKEN }}
+          ./gradlew jib -Djib.to.image=jrmcdonald/ifsc-ical-generator:${{ steps.semantic.outputs.new_release_version }}
+          
+      - uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: reports
+          path: build/reports
+
+      - name: Notify Slack Success
+        if: success()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          message_id: ${{ steps.slack.outputs.message_id }}
+          channel: ${{ env.slack-channel }}
+          status: BUILD SUCCESS
+          color: good
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Notify Slack Failed
+        if: failure()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          message_id: ${{ steps.slack.outputs.message_id }}
+          channel: ${{ env.slack-channel }}
+          status: BUILD FAILED
+          color: danger
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
