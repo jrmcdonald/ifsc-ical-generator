@@ -97,10 +97,11 @@ jobs:
         run: ./gradlew jibDockerBuild -Djib.to.tags=latest
 
       - name: Docker Scan
-        uses: anchore/scan-action@master
+        uses: anchore/scan-action@v2
         with:
-          image-reference: "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:latest"
+          image: "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:latest"
           fail-build: true
+          severity-cutoff: critical
           
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v2
