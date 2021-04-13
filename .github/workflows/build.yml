@@ -92,12 +92,12 @@ jobs:
         run: ./gradlew sonarqube -Dsonar.login=${SONAR_LOGIN} ${BRANCH_NAME_OPT} ${PR_NUMBER_OPT} --info
 
       - name: Docker Build
-        run: ./gradlew jibDockerBuild -Djib.to.tags=latest
+        run: ./gradlew bootBuildImage --imageName build:latest
 
       - name: Docker Scan
         uses: anchore/scan-action@v2
         with:
-          image: "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:latest"
+          image: "build:latest"
           fail-build: true
           severity-cutoff: critical
           
@@ -115,10 +115,9 @@ jobs:
       - name: Docker Release
         if: steps.semantic.outputs.new_release_published == 'true'
         run: |
-          docker login -u jrmcdonald -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
-          ./gradlew jib
+          ./gradlew bootBuildImage
           docker login -u jrmcdonald -p ${{ secrets.DOCKER_IO_TOKEN }}
-          ./gradlew jib -Djib.to.image=jrmcdonald/ifsc-ical-generator:${{ steps.semantic.outputs.new_release_version }}
+          docker push docker.io/jrmcdonaldifsc-ical-generator:${{ steps.semantic.outputs.new_release_version }}
           
       - uses: actions/upload-artifact@v1
         if: always()
