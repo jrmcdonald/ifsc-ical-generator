@@ -13,28 +13,21 @@ class CompetitionTest {
     @DisplayName("Should model Competition by default constructor")
     void shouldModelCompetitionByDefaultConstructor() {
         Competition competition = new Competition();
-        competition.setName("Cliffhanger");
-        competition.setHomepage("http://www.cliffhanger.domain");
-        competition.setCategory("69");
-        competition.setStartDate("2018-03-11");
-        competition.setEndDate("2018-03-12");
+        competition.setEvent("Cliffhanger");
+        competition.setStartDate("2021-04-16");
+        competition.setEndDate("2021-04-17");
 
-        assertThat(competition.getName()).isEqualTo("Cliffhanger");
-        assertThat(competition.getCategory()).isEqualTo("69");
-        assertThat(competition.getHomepage()).isEqualTo("http://www.cliffhanger.domain");
-        assertThat(competition.getStartDate()).isEqualTo(Instant.parse("2018-03-11T00:00:00Z"));
-        assertThat(competition.getEndDate()).isEqualTo(Instant.parse("2018-03-12T00:00:00Z"));
+        assertThat(competition.getEvent()).isEqualTo("Cliffhanger");
+        assertThat(competition.getStartDate()).isEqualTo(Instant.parse("2021-04-16T00:00:00Z"));
+        assertThat(competition.getEndDate()).isEqualTo(Instant.parse("2021-04-17T00:00:00Z"));
     }
 
     @Test
     @DisplayName("Should model Competition by all arguments constructor")
     void shouldModelCompetitionByAllArgumentsConstructor() {
-        Competition competition = new Competition("Cliffhanger", "http://www.cliffhanger.domain",
-                "69", Instant.parse("2018-03-11T00:00:00Z"), Instant.parse("2018-03-12T00:00:00Z"));
+        Competition competition = new Competition("Cliffhanger", Instant.parse("2018-03-11T00:00:00Z"), Instant.parse("2018-03-12T00:00:00Z"));
 
-        assertThat(competition.getName()).isEqualTo("Cliffhanger");
-        assertThat(competition.getCategory()).isEqualTo("69");
-        assertThat(competition.getHomepage()).isEqualTo("http://www.cliffhanger.domain");
+        assertThat(competition.getEvent()).isEqualTo("Cliffhanger");
         assertThat(competition.getStartDate()).isEqualTo(Instant.parse("2018-03-11T00:00:00Z"));
         assertThat(competition.getEndDate()).isEqualTo(Instant.parse("2018-03-12T00:00:00Z"));
     }

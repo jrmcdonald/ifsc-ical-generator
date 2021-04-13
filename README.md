@@ -2,7 +2,7 @@
 
 The IFSC iCalendar Generator is a utility that allows anyone to generate an iCalendar file containing the IFSC competition schedule for importing into calendar applications.
 
-The utility fetches JSON data from the [IFSC ranking endpoint](http://egw.ifsc-climbing.org/egw/ranking/json.php) and converts it into the iCalendar format.
+The utility fetches JSON data from the [IFSC ranking endpoint](https://components.ifsc-climbing.org/results-api.php?api=season_leagues_calendar&league=388) and converts it into the iCalendar format.
 
 ## Running Locally
 
@@ -32,11 +32,6 @@ SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
 To make a request for all competitions:
 ```shell script
 curl -X GET -H "Content-Type: application/json" localhost:8080/calendar
-```
-
-To make a request for competitions in specific categories a JSON array of category numbers should be passed in the request body:
-```shell script
-curl -X POST -H "Content-Type: application/json" -d '["69","68","262","256","70"]' localhost:8080/calendar
 ```
 
 ## Local Development

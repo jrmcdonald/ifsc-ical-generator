@@ -1,57 +1,162 @@
 {
-    "competitions": [{
-            "WetId": "7312",
-            "rkey": "18_GR",
-            "name": "Promotional Event Gravical (B) - Singapore (SGP) 2018",
-            "homepage":	"http://www.gravical.domain",
-            "cat_id": "70",
-            "modified": "2017-11-27 17:01:38",
-            "selfregister": "0",
-            "open_comp": "0",
-            "prequal_type": "0",
-            "average_ex_aquo": true,
-            "duration": "4",
-            "date_end": "2018-01-14",
-            "date_span": "11  - 14 January 2018",
-            "cats": [],
-            "short": "Gravical2017",
-            "date": "2018-01-11"
+  "events": [
+    {
+      "event": "IFSC - Climbing World Cup (B) - Meiringen (SUI) 2021",
+      "event_id": 1187,
+      "url": "/api/v1/events/1187",
+      "infosheet_url": "/events/1187/infosheet",
+      "additional_info_url": null,
+      "starts_at": "2021-04-15 22:00:00 UTC",
+      "ends_at": "2021-04-17 21:59:00 UTC",
+      "local_start_date": "2021-04-16",
+      "local_end_date": "2021-04-17",
+      "timezone": {
+        "value": "Europe/Zurich"
+      },
+      "d_cats": [
+        {
+          "id": 3,
+          "name": "BOULDER Men",
+          "category_rounds": [
+            {
+              "category_round_id": 6164,
+              "format": "Two groups, two boulder sets",
+              "routes": []
+            }
+          ]
         },
         {
-            "WetId": "7312",
-            "rkey": "18_GR",
-            "name": "Promotional Event Gravical (B) - Tai'an (SGP) 2018",
-            "homepage":	"http://www.gravical.domain",
-            "cat_id": "70",
-            "modified": "2017-11-27 17:01:38",
-            "selfregister": "0",
-            "open_comp": "0",
-            "prequal_type": "0",
-            "average_ex_aquo": true,
-            "duration": "4",
-            "date_end": "2018-02-14",
-            "date_span": "11  - 14 January 2018",
-            "cats": [],
-            "short": "Gravical2017",
-            "date": "2018-02-11"
-        },
-        {
-            "WetId": "7312",
-            "rkey": "18_GR",
-            "name": "Cliffhanger",
-            "homepage":	"http://www.cliffhanger.domain",
-            "cat_id": "69",
-            "modified": "2017-11-27 17:01:38",
-            "selfregister": "0",
-            "open_comp": "0",
-            "prequal_type": "0",
-            "average_ex_aquo": true,
-            "duration": "4",
-            "date_end": "2018-03-14",
-            "date_span": "11  - 14 January 2018",
-            "cats": [],
-            "short": "Gravical2017",
-            "date": "2018-03-11"
+          "id": 7,
+          "name": "BOULDER Women",
+          "category_rounds": [
+            {
+              "category_round_id": 6165,
+              "format": "Two groups, two boulder sets",
+              "routes": []
+            }
+          ]
         }
-    ]
+      ]
+    },
+    {
+      "event": "IFSC - Climbing World Cup (B) - Salt Lake City (USA) 2021",
+      "event_id": 1190,
+      "url": "/api/v1/events/1190",
+      "infosheet_url": "/events/1190/infosheet",
+      "additional_info_url": null,
+      "starts_at": "2021-05-21 06:00:00 UTC",
+      "ends_at": "2021-05-23 05:59:00 UTC",
+      "local_start_date": "2021-05-21",
+      "local_end_date": "2021-05-22",
+      "timezone": {
+        "value": "America/Denver"
+      },
+      "d_cats": [
+        {
+          "id": 3,
+          "name": "BOULDER Men",
+          "category_rounds": [
+            {
+              "category_round_id": 6174,
+              "format": "Two groups, two boulder sets",
+              "routes": []
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "BOULDER Women",
+          "category_rounds": [
+            {
+              "category_round_id": 6175,
+              "format": "Two groups, two boulder sets",
+              "routes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "event": "IFSC - Climbing World Cup (B,S) - Salt Lake City (USA) 2021",
+      "event_id": 1192,
+      "url": "/api/v1/events/1192",
+      "infosheet_url": "/events/1192/infosheet",
+      "additional_info_url": null,
+      "starts_at": "2021-05-28 06:00:00 UTC",
+      "ends_at": "2021-05-31 05:59:00 UTC",
+      "local_start_date": "2021-05-28",
+      "local_end_date": "2021-05-30",
+      "timezone": {
+        "value": "America/Denver"
+      },
+      "d_cats": [
+        {
+          "id": 3,
+          "name": "BOULDER Men",
+          "category_rounds": [
+            {
+              "category_round_id": 6176,
+              "format": "Two groups, two boulder sets",
+              "routes": []
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "BOULDER Women",
+          "category_rounds": [
+            {
+              "category_round_id": 6177,
+              "format": "Two groups, two boulder sets",
+              "routes": []
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "SPEED Men",
+          "category_rounds": [
+            {
+              "category_round_id": 6178,
+              "format": "Qualification (staggered)",
+              "routes": [
+                {
+                  "id": 1273,
+                  "name": "A",
+                  "startlist": "/api/v1/routes/1273/startlist"
+                },
+                {
+                  "id": 1274,
+                  "name": "B",
+                  "startlist": "/api/v1/routes/1274/startlist"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "SPEED Women",
+          "category_rounds": [
+            {
+              "category_round_id": 6179,
+              "format": "Qualification (staggered)",
+              "routes": [
+                {
+                  "id": 1275,
+                  "name": "A",
+                  "startlist": "/api/v1/routes/1275/startlist"
+                },
+                {
+                  "id": 1276,
+                  "name": "B",
+                  "startlist": "/api/v1/routes/1276/startlist"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
