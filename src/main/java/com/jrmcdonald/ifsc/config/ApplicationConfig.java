@@ -1,15 +1,18 @@
 package com.jrmcdonald.ifsc.config;
 
-import com.jrmcdonald.ifsc.filter.WebFluxContextFilter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import com.jrmcdonald.common.ext.spring.datetime.config.DateTimeConfiguration;
+import com.jrmcdonald.common.ext.spring.reactive.context.config.ReactiveContextLifterConfiguration;
+import com.jrmcdonald.common.ext.spring.reactive.filter.config.ReactiveFilterConfiguration;
+
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import({
+        DateTimeConfiguration.class,
+        ReactiveContextLifterConfiguration.class,
+        ReactiveFilterConfiguration.class,
+})
 public class ApplicationConfig {
 
-    @Bean
-    public WebFluxContextFilter webFluxFilter(@Value("${spring.application.name}") String applicationName)  {
-        return new WebFluxContextFilter(applicationName);
-    }
 }

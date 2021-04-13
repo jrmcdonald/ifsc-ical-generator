@@ -3,80 +3,74 @@ plugins {
     id 'java-test-fixtures'
     id 'maven-publish'
     id 'jacoco'
-    id 'com.github.ben-manes.versions' version "${versionsPluginVersion}"
-    id 'com.github.spotbugs' version "${spotbugsPluginVersion}"
+    id 'com.jrmcdonald.ms-gradle-baseline' version "${gradleBaselinePluginVerson}"
     id 'com.google.cloud.tools.jib' version "${googleJibPluginVersion}"
-    id 'com.gtramontina.ghooks.gradle' version "${ghooksPluginVersion}"
-    id 'org.springframework.boot' version "${springBootPluginVersion}"
-    id 'org.owasp.dependencycheck' version "${dependencyCheckPluginVersion}"
-    id 'org.sonarqube' version "${sonarqubePluginVersion}"
-    id 'io.spring.dependency-management' version "${springDependencyManagementPluginVersion}"
-    id 'project-report'
 }
 
 group = 'com.jrmcdonald'
 
 repositories {
     mavenCentral()
+    maven {
+        url = 'https://maven.pkg.github.com/jrmcdonald/ms-common'
+        credentials {
+            username = "jrmcdonald"
+            password = project.findProperty('GITHUB_TOKEN') ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    commonPlatform platform("com.jrmcdonald:ms-common-bom:${commonPlatformVersion}")
 
-    implementation "com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}"
-    implementation "net.logstash.logback:logstash-logback-encoder:${logstashEncoderVersion}"
-    implementation "net.sf.biweekly:biweekly:${biweeklyVersion}"
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-all'
+    compileOnly group: 'org.projectlombok', name: 'lombok'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok'
 
-    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    implementation 'com.jrmcdonald:ms-common-ext-spring-datetime'
+    implementation 'com.jrmcdonald:ms-common-ext-spring-reactive-context'
+    implementation 'com.jrmcdonald:ms-common-ext-spring-reactive-filter'
 
-    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
-    testImplementation "com.squareup.okhttp3:okhttp:${okhttpVersion}"
-    testImplementation "com.squareup.okhttp3:mockwebserver:${okhttpVersion}"
+    implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations'
+    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder'
+    implementation group: 'net.sf.biweekly', name: 'biweekly', version: "${biweeklyVersion}"
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-kubernetes-all'
+
+    testCompileOnly group: 'org.projectlombok', name: 'lombok'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok'
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter'
+    testImplementation group: 'com.squareup.okhttp3', name: 'okhttp'
+    testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation group: 'io.projectreactor', name: 'reactor-test'
 
-    testFixturesCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-    testFixturesAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testFixturesCompileOnly group: 'org.projectlombok', name: 'lombok'
+    testFixturesAnnotationProcessor group: 'org.projectlombok', name: 'lombok'
 
-    testFixturesImplementation "com.github.spotbugs:spotbugs-annotations:${spotbugsVersion}"
-    testFixturesImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
-    testFixturesImplementation "com.squareup.okhttp3:mockwebserver:${okhttpVersion}"
-    testFixturesImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-compileJava {
-    options.compilerArgs << "-Werror"
-    options.compilerArgs << "-Xlint:all"
-    options.compilerArgs << "-Xlint:-try"
-    options.compilerArgs << "-Xlint:-processing"
-}
-
-compileTestFixturesJava {
-    options.compilerArgs << "-nowarn"
-    options.compilerArgs << "-Xlint:none"
+    testFixturesImplementation group: 'com.github.spotbugs', name: 'spotbugs-annotations'
+    testFixturesImplementation group: 'org.slf4j', name: 'slf4j-api'
+    testFixturesImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver'
+    testFixturesImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api'
 }
 
 test {
-    useJUnitPlatform()
     // Make sure the classes dir is used on the test classpath.
     // When test fixtures are involved, the JAR is used by default
     classpath = sourceSets.main.output.classesDirs + classpath - files(jar.archiveFile)
 }
 
 configurations {
+    testFixturesCompileOnly.extendsFrom(commonPlatform)
+    testFixturesAnnotationProcessor.extendsFrom(commonPlatform)
+    testFixturesImplementation.extendsFrom(commonPlatform)
+
     [apiElements, runtimeElements].each {
         it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
         it.outgoing.artifact(bootJar)
@@ -101,79 +95,8 @@ publishing {
     }
 }
 
-jacoco {
-    toolVersion = "${jacocoToolVersion}"
-}
-
-jacocoTestReport {
-    reports {
-        html.enabled = true
-        xml.enabled = true
-        csv.enabled = false
-    }
-}
-
 jib {
     to {
         image = "docker.pkg.github.com/jrmcdonald/ifsc-ical-generator/ifsc-ical-generator:${project.version}"
     }
 }
-
-dependencyUpdates.resolutionStrategy {
-    componentSelection { rules ->
-        rules.all { ComponentSelection selection ->
-            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-            }
-            if (rejected) {
-                selection.reject('Release candidate')
-            }
-        }
-    }
-}
-
-dependencyCheck {
-    format = 'ALL'
-    analyzers {
-        nodeEnabled = false
-    }
-}
-
-spotbugs {
-    toolVersion.set("${spotbugsToolVersion}")
-}
-
-spotbugsMain{
-    reports {
-        xml.enabled(false)
-        html.enabled(true)
-    }
-    spotbugsTest.enabled = false
-}
-
-plugins.withType(JacocoPlugin) {
-    tasks["test"].finalizedBy 'jacocoTestReport'
-}
-
-htmlDependencyReport {
-    projects = project.allprojects
-}
-
-dependencyReport {
-    projects = project.allprojects
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectKey", "jrmcdonald_ifsc-ical-generator"
-        property "sonar.organization", "jrmcdonald"
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
-    }
-}
-
-check.dependsOn htmlDependencyReport
-check.dependsOn dependencyReport
-check.dependsOn dependencyCheckAnalyze
-build.dependsOn dependencyUpdates
-test.finalizedBy jacocoTestReport
