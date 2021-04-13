@@ -1,3 +1,3 @@
 external:
   ifsc:
-    host: "http://egw.ifsc-climbing.org"
+    host: "https://components.ifsc-climbing.org/"
