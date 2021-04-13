@@ -25,9 +25,12 @@ public class IfscCompetitionsService implements CompetitionsService {
     }
 
     @Override
-    public Mono<CompetitionList> findAll() {
+    public Mono<CompetitionList> findAll(String leagueId) {
         return webClient.get()
-                .uri("/results-api.php?api=season_leagues_calendar&league=388")
+                .uri(uriBuilder -> uriBuilder.path("/results-api.php")
+                                             .queryParam("api", "season_leagues_calendar")
+                                             .queryParam("league", leagueId)
+                                             .build())
                 .retrieve()
                 .bodyToMono(CompetitionList.class);
     }

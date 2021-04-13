@@ -43,10 +43,10 @@ class CalendarControllerTest {
     void shouldExecuteService() {
         String expectedValue = "ICALENDAR_VALUE";
 
-        when(calendarService.createCalendar()).thenReturn(Mono.just(expectedValue));
+        when(calendarService.createCalendar("388")).thenReturn(Mono.just(expectedValue));
 
         FluxExchangeResult<String> exchangeResult = client.get()
-                .uri("/calendar")
+                .uri("/calendar?leagueId=388")
                 .exchange()
                 .expectHeader()
                 .contentType("text/calendar;charset=UTF-8")
@@ -56,6 +56,6 @@ class CalendarControllerTest {
                     .assertNext(result -> assertThat(result).isEqualTo(expectedValue))
                     .verifyComplete();
 
-        verify(calendarService).createCalendar();
+        verify(calendarService).createCalendar("388");
     }
 }

@@ -5,5 +5,5 @@ import com.jrmcdonald.ifsc.model.CompetitionList;
 import reactor.core.publisher.Mono;
 
 public interface CompetitionsService {
-    Mono<CompetitionList> findAll();
+    Mono<CompetitionList> findAll(String leagueId);
 }

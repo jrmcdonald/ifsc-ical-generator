@@ -25,8 +25,8 @@ public class InternetCalendarService implements CalendarService {
     private final CompetitionsService competitionsService;
 
     @Override
-    public Mono<String> createCalendar() {
-        return competitionsService.findAll()
+    public Mono<String> createCalendar(String leagueId) {
+        return competitionsService.findAll(leagueId)
                 .flatMap(competitions -> Mono.just(competitions.getEvents()))
                 .flatMap(this::mapEventsToCalendar)
                 .doFinally(calendar -> log.info("Created calendar for all categories"));

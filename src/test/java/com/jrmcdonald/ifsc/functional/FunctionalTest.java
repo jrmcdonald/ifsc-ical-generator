@@ -54,7 +54,7 @@ class FunctionalTest {
                                 .setBody(Files.readString(Paths.get("src/test/resources/data/ifscResponseInput.json"))));
 
         client.get()
-                .uri("/calendar")
+                .uri("/calendar?leagueId=388")
                 .exchange()
                 .expectHeader()
                 .contentType("text/calendar;charset=UTF-8")

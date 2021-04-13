@@ -30,8 +30,10 @@ To run the service in a kubernetes cluster (with hot reloading):
 ### Sample Requests
 To make a request for all competitions:
 ```shell script
-curl -X GET -H "Content-Type: application/json" localhost:8080/calendar
+curl -X GET -H "Content-Type: application/json" localhost:8080/calendar?leagueId=388
 ```
+
+Note that the leagueId can be obtained by inspecting the network requests on the [IFSC Competitions page](https://www.ifsc-climbing.org/index.php/world-competition).
 
 ## License
 This project uses the following license: [MIT](LICENSE.md).

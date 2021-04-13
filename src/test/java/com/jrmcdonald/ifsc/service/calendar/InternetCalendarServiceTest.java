@@ -56,9 +56,9 @@ class InternetCalendarServiceTest {
         Competition cliffhanger = new Competition("Cliffhanger", epoch, epoch);
         Competition olympics = new Competition("Olympics", epochPlusOne, epochPlusOne);
 
-        when(competitionsService.findAll()).thenReturn(Mono.just(new CompetitionList(asList(cliffhanger, olympics))));
+        when(competitionsService.findAll("388")).thenReturn(Mono.just(new CompetitionList(asList(cliffhanger, olympics))));
 
-        Mono<String> calendarMono = calendarService.createCalendar();
+        Mono<String> calendarMono = calendarService.createCalendar("388");
 
         StepVerifier.create(calendarMono)
                 .assertNext(calendarString -> {
