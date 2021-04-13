@@ -56,7 +56,7 @@ class IfscCompetitionsServiceTest {
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .setBody(Files.readString(Paths.get("src/test/resources/data/ifscResponseInput.json"))));
 
-        StepVerifier.create(service.findAll())
+        StepVerifier.create(service.findAll("388"))
                 .assertNext(competitionList -> {
                     assertThat(competitionList.getEvents()).hasSize(3);
 
