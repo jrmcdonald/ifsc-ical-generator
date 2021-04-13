@@ -54,7 +54,7 @@ class IfscCompetitionsServiceTest {
                 new MockResponse()
                         .setResponseCode(HttpStatus.OK.value())
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(new String(Files.readAllBytes(Paths.get("src/test/resources/data/ifscResponseInput.json")))));
+                        .setBody(Files.readString(Paths.get("src/test/resources/data/ifscResponseInput.json"))));
 
         StepVerifier.create(service.findAll())
                 .assertNext(competitionList -> {
