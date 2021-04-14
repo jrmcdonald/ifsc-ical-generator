@@ -1,9 +1,37 @@
-.idea/
-.gradle/
+HELP.md
+.gradle
 **/build/
-*.jar
-*.zip
-**/build
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Node ###
 node_modules/
 .yarn/*
 !.yarn/cache
@@ -12,6 +40,3 @@ node_modules/
 !.yarn/sdks
 !.yarn/versions
 yarn-error.log
-
-!gradle/wrapper/*.jar
-.DS_Store
