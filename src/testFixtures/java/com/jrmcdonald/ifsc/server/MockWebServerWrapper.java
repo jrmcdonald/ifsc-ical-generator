@@ -1,11 +1,12 @@
 package com.jrmcdonald.ifsc.server;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.io.IOException;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.mockwebserver.MockWebServer;
 
 @Slf4j
 @Getter
@@ -23,7 +24,7 @@ public final class MockWebServerWrapper implements ExtensionContext.Store.Closea
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IOException {
         server.shutdown();
     }
 }

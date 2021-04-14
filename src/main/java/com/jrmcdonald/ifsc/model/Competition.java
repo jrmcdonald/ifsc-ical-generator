@@ -1,16 +1,16 @@
 package com.jrmcdonald.ifsc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -18,19 +18,17 @@ import java.time.ZoneOffset;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Competition {
-    private String name;
-    private String homepage;
-    @JsonProperty("cat_id")
-    private String category;
+
+    private String event;
     private Instant startDate;
     private Instant endDate;
 
-    @JsonSetter("date")
+    @JsonSetter("local_start_date")
     public void setStartDate(String date) {
         startDate = convertDateStringToInstant(date);
     }
 
-    @JsonSetter("date_end")
+    @JsonSetter("local_end_date")
     public void setEndDate(String date) {
         endDate = convertDateStringToInstant(date);
     }

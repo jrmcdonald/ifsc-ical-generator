@@ -4,7 +4,7 @@ import com.jrmcdonald.ifsc.Application;
 import com.jrmcdonald.ifsc.extensions.MockWebServerExtension;
 import com.jrmcdonald.ifsc.functional.config.FunctionalTestConfiguration;
 import com.jrmcdonald.ifsc.server.MockWebServerWrapper;
-import okhttp3.mockwebserver.MockResponse;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +23,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import okhttp3.mockwebserver.MockResponse;
+
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @ExtendWith({SpringExtension.class, MockWebServerExtension.class})
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ContextConfiguration(initializers = FunctionalTestConfiguration.Initializer.class)
 @ActiveProfiles("test")
-public class FunctionalTest {
+class FunctionalTest {
 
     @LocalServerPort
     private int port;
@@ -49,10 +51,10 @@ public class FunctionalTest {
                         new MockResponse()
                                 .setResponseCode(HttpStatus.OK.value())
                                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                                .setBody(new String(Files.readAllBytes(Paths.get("src/test/resources/data/ifscResponseInput.json")))));
+                                .setBody(Files.readString(Paths.get("src/test/resources/data/ifscResponseInput.json"))));
 
         client.get()
-                .uri("/calendar")
+                .uri("/calendar?leagueId=388")
                 .exchange()
                 .expectHeader()
                 .contentType("text/calendar;charset=UTF-8")
