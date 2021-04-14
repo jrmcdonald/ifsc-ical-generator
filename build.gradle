@@ -31,10 +31,10 @@ dependencies {
 
     implementation group: 'com.github.spotbugs', name: 'spotbugs-annotations'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder'
-    implementation group: 'net.sf.biweekly', name: 'biweekly', version: "${biweeklyVersion}"
+    implementation group: 'net.sf.biweekly', name: 'biweekly'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-kubernetes-all'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-kubernetes-client-config'
 
     testCompileOnly group: 'org.projectlombok', name: 'lombok'
     testAnnotationProcessor group: 'org.projectlombok', name: 'lombok'
