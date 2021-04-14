@@ -141,7 +141,7 @@ jobs:
         run: |
           ./gradlew bootBuildImage
           docker login -u jrmcdonald -p ${{ secrets.DOCKER_IO_TOKEN }}
-          docker push docker.io/jrmcdonaldifsc-ical-generator:${{ steps.semantic.outputs.new_release_version }}
+          docker push docker.io/jrmcdonald/ifsc-ical-generator:${{ steps.semantic.outputs.new_release_version }}
           
       - uses: actions/upload-artifact@v1
         if: always()
