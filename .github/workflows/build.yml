@@ -41,7 +41,19 @@ jobs:
           fetch-depth: 50
       - run: |
           git fetch --no-tags --prune --depth=1 origin main
-      
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - uses: actions/cache@v2
         with:
           path: |
@@ -61,8 +73,8 @@ jobs:
         with:
           node-version: '12.x'
 
-      - name: Yarn Install
-        run: yarn install --immutable
+      - name: Yarn
+        run: yarn --immutable
 
 #      TODO: re-enable when supports yarn 2.x
 #      - name: Yarn Audit
